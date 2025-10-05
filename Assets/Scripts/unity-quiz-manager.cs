@@ -5,39 +5,58 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using TMPro;
+using UnityEditor;
+using System;
+using Unity.VisualScripting;
+using System.Text;
+using System.Globalization;
+using static UnityEngine.Rendering.DebugUI;
 
 public class QuizManager : MonoBehaviour
 {
     [Header("CSV設定")]
     [SerializeField] private string csvFileName = "quiz_data.csv";
-    
-    [Header("UI要素")]
+    [Header("SetupUI")]
+    [SerializeField] GameObject setupPanel;
+    [SerializeField] TextMeshProUGUI tagField;
+    [SerializeField] TextMeshProUGUI IdField;
+    [SerializeField] TextMeshProUGUI errorMessage;
+    [Header("クイズUI要素")]
     [SerializeField] private TextMeshProUGUI questionText;        // 問題文表示用Text
-    [SerializeField] private Button[] choiceButtons;   // 選択肢ボタン（4つ）
+    [SerializeField] private TextMeshProUGUI progressText;      // 1/10 みたいなやつ
+    [SerializeField] private UnityEngine.UI.Button[] choiceButtons;   // 選択肢ボタン（4つ）
     [SerializeField] private TextMeshProUGUI[] choiceTexts;       // 選択肢テキスト（4つ）
+    [Header("Result画面UI")]
     [SerializeField] private GameObject resultPanel;   // 結果表示パネル
     [SerializeField] private TextMeshProUGUI resultText;          // 正誤表示Text
     [SerializeField] private TextMeshProUGUI explanationText;     // 解説表示Text
-    [SerializeField] private Button nextButton;        // 次へボタン
-    
+    [SerializeField] private TextMeshProUGUI nextText; 
+    [SerializeField] private UnityEngine.UI.Button nextButton;        // 次へボタン
+    [Header("EnddingUI")]
+    [SerializeField] GameObject enddingPanel;
     [Header("テスト設定")]
     [SerializeField] private bool testMode = false;           // テストモード
-    [SerializeField] private TestModeType testModeType = TestModeType.Random;
+    [SerializeField] private GameModeType gameModeType = GameModeType.Random;
     [SerializeField] private int testQuestionNumber = 1;      // テスト用問題番号
     [SerializeField] private string testTag = "";             // テスト用タグ
     
     private List<QuizData> allQuizData = new List<QuizData>();
+    private List<QuizData> sortQuizData = new List<QuizData>();
+    private int quizindex = 0;
     private QuizData currentQuiz;
+
     private bool isAnswered = false;
     private bool lastResult = false;
     
-    public enum TestModeType
+    public enum GameModeType
     {
+        Setup,
+        EditorRandom,
         Random,
         SpecificNumber,
-        Tag
+        Tag,
+        Endding
     }
-    
     void Start()
     {
         LoadCSVData();
@@ -48,10 +67,9 @@ public class QuizManager : MonoBehaviour
         {
             StartTestMode();
         }
-        //今のとこ分岐処理ないので混乱を防ぐため同じことをする.
         else
         {
-            StartTestMode();
+            ShowSetup();
         }
     }
     
@@ -131,30 +149,49 @@ public class QuizManager : MonoBehaviour
             nextButton.onClick.AddListener(OnNextButtonClick);
         }
         
-        // 結果パネルを非表示
-        if (resultPanel != null)
-        {
-            resultPanel.SetActive(false);
-        }
     }
+
     
     // テストモード開始
     void StartTestMode()
     {
-        switch (testModeType)
+        switch (gameModeType)
         {
-            case TestModeType.Random:
+            case GameModeType.Setup:
+                ShowSetup();
+                break;
+            case GameModeType.EditorRandom:
+                ShowEditorRandomQuiz();
+                break;
+            case GameModeType.Random:
                 ShowRandomQuiz();
                 break;
-            case TestModeType.SpecificNumber:
+            case GameModeType.SpecificNumber:
                 ShowQuizByNumber(testQuestionNumber);
                 break;
-            case TestModeType.Tag:
+            case GameModeType.Tag:
                 ShowQuizByTag(testTag);
+                break;
+            case GameModeType.Endding:
                 break;
         }
     }
+    public void SelectGameMode(GameModeType _type)
+    {
+        gameModeType = _type;
+    }
     
+    public void ShowSetup()
+    {
+        // 問題パネル以外を非表示
+        setupPanel.SetActive(false);
+        resultPanel.SetActive(false);
+        enddingPanel.SetActive(false);
+        errorMessage.text = "";
+        nextText.text = "Next";
+        setupPanel.SetActive(true);   
+    }
+
     // 外部から呼び出されるメソッド：ランダム出題
     public void ShowRandomQuiz()
     {
@@ -164,10 +201,38 @@ public class QuizManager : MonoBehaviour
             return;
         }
         
-        int randomIndex = Random.Range(0, allQuizData.Count);
+        if(sortQuizData.Count == 0)
+        {
+            sortQuizData = allQuizData.OrderBy(i => Guid.NewGuid()).ToList();
+        }
+        ShowQuiz(sortQuizData[quizindex]);
+    }
+    public void ShowEditorRandomQuiz()
+    {
+        if (allQuizData.Count == 0)
+        {
+            Debug.LogError("クイズデータがありません");
+            return;
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, allQuizData.Count);
         ShowQuiz(allQuizData[randomIndex]);
     }
-    
+    public void ReadID()
+    {
+        int id = TMPTextUtils.ParseInt(IdField.text,-1);
+        Debug.Log($"input={id}");
+        if (id == -1)
+        {
+            errorMessage.text = $"入力に問題があります";
+            UnityEngine.Debug.LogWarning($"Input Format Exception");
+            return;
+        }
+        gameModeType = GameModeType.SpecificNumber;
+        ShowQuizByNumber(id);
+    }
+
+
     // 外部から呼び出されるメソッド：番号指定出題
     public void ShowQuizByNumber(int questionNumber)
     {
@@ -178,31 +243,64 @@ public class QuizManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"問題番号 {questionNumber} が見つかりません");
+            errorMessage.text = $"問題番号 {questionNumber} が見つかりません";
+            Debug.LogWarning($"問題番号 {questionNumber} が見つかりません");
+            return;
         }
     }
-    
+    public void ReadTag()
+    {
+
+        string tag = TMPTextUtils.NormalizeText(tagField.text);
+        Debug.Log($"Input = {tag}");
+        foreach (char c in tag)
+        {
+            Debug.Log($"'{c}' -> U+{(int)c:X4}");
+        }
+        if (string.IsNullOrEmpty(tag))
+        {
+            errorMessage.text = $"入力に問題があります入力={tag}";
+            UnityEngine.Debug.LogWarning($"Input Format Exception,入力={tag}");
+            return;
+        }
+        gameModeType = GameModeType.Tag;
+        ShowQuizByTag(tag);
+    }
+
     // 外部から呼び出されるメソッド：タグ指定出題
     public void ShowQuizByTag(string tag)
     {
-        List<QuizData> taggedQuizzes = allQuizData.Where(q => q.tag == tag).ToList();
-        if (taggedQuizzes.Count > 0)
+        if(sortQuizData.Count == 0)
         {
-            int randomIndex = Random.Range(0, taggedQuizzes.Count);
-            ShowQuiz(taggedQuizzes[randomIndex]);
+            List<QuizData> taggedQuizzes = allQuizData.Where(q => q.tag == tag).ToList();
+            if (taggedQuizzes.Count > 0)
+            {
+                sortQuizData = allQuizData.OrderBy(q => Guid.NewGuid()).ToList();
+            }
+            else
+            {
+                errorMessage.text = $"タグ '{tag}' の問題が見つかりません";
+                Debug.LogWarning($"タグ '{tag}' の問題が見つかりません");
+                return;
+            }
         }
-        else
-        {
-            Debug.LogError($"タグ '{tag}' の問題が見つかりません");
-        }
+        ShowQuiz(sortQuizData[quizindex]);
+        
+        
     }
     
     // クイズ表示
     void ShowQuiz(QuizData quiz)
     {
+        quizindex++;
         currentQuiz = quiz;
         isAnswered = false;
         
+        if(progressText != null)
+        {
+            progressText.text = quizindex.ToString()+"/"+sortQuizData.Count;
+        }
+
         // 問題文を表示
         if (questionText != null)
         {
@@ -220,11 +318,9 @@ public class QuizManager : MonoBehaviour
             }
         }
         
-        // 結果パネルを非表示
-        if (resultPanel != null)
-        {
-            resultPanel.SetActive(false);
-        }
+        resultPanel.SetActive(false);
+        setupPanel.SetActive(false);
+        enddingPanel.SetActive(false);
     }
     
     // 選択肢クリック処理
@@ -255,10 +351,6 @@ public class QuizManager : MonoBehaviour
     // 結果表示
     void ShowResult(bool isCorrect, int selectedAnswer)
     {
-        if (resultPanel != null)
-        {
-            resultPanel.SetActive(true);
-        }
         
         if (resultText != null)
         {
@@ -278,20 +370,28 @@ public class QuizManager : MonoBehaviour
         {
             explanationText.text = $"解説:\n{currentQuiz.explanation}";
         }
+        
+        if (sortQuizData.Count == quizindex)
+        {
+            nextText.text = "Result";
+        }
+
+        if (resultPanel != null)
+        {
+            resultPanel.SetActive(true);
+        }
     }
     
     // 次へボタンクリック処理
     void OnNextButtonClick()
     {
-        if (testMode)
+        if(sortQuizData.Count == quizindex)
         {
-            StartTestMode();
+            gameModeType = GameModeType.Endding;
+            enddingPanel.SetActive(true);
+            return;
         }
-        else
-        {
-            StartTestMode();
-        }
-                
+        StartTestMode();         
     }
     
     // 正誤結果を取得（外部から呼び出し可能）
@@ -304,5 +404,25 @@ public class QuizManager : MonoBehaviour
     public QuizData GetCurrentQuiz()
     {
         return currentQuiz;
+    }
+}
+
+[CustomEditor(typeof(QuizManager))]
+public class QuizStartButton : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+        QuizManager _manager = target as QuizManager;
+
+        GUILayout.Label("Button");
+        GUILayout.BeginHorizontal();
+        GUILayout.SelectionGrid(12, new string[] { "A", "B", "C" },3);
+        GUILayout.EndHorizontal();
+        
+        if (GUILayout.Button("A"))
+        {
+
+        }
     }
 }

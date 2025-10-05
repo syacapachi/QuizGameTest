@@ -1,23 +1,23 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor.Rendering.LookDev;
-using UnityEngine.Networking;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using System;
+using System.Text;
+using System.Diagnostics;
 
 [ExecuteAlways]
-public class QuizDataBaseManager : MonoBehaviour
+public class QuizLoadFromCSV : MonoBehaviour
 {
-    [Header("初期化用クイズデータベース")]
-    [SerializeField] public QuizDataBase defaultDatabase; // 内部デフォルト
+    [Header("対象クイズデータベース")]
+    [SerializeField] public QuizDataWrapperSO defaultDatabase; // 内部デフォルト
     private List<QuizData> loadedQuizzes = new List<QuizData>();
     [Header("更新用設定")]
     [SerializeField] bool isOverWrite = false;
     [SerializeField] string csvFilePath = "quiz_data.csv";
    
     public List<QuizData> QuizDataList => defaultDatabase.quizDatas;
+
 
     // 外部CSVロード
     private void UpdateCSV() 
@@ -32,11 +32,11 @@ public class QuizDataBaseManager : MonoBehaviour
         if (File.Exists(path))
         {
             StartCoroutine(LoadCSV(path));
-            Debug.Log("CSV file Load is Success");
+            UnityEngine.Debug.Log("CSV file Load is Success");
         }
         else
         {
-            Debug.LogError("CSV file is no Exsit");
+            UnityEngine.Debug.LogError("CSV file is no Exsit");
         }
         //foreach(var quiz in loadedQuizzes)
         //{
@@ -147,21 +147,40 @@ public class QuizDataBaseManager : MonoBehaviour
         //以下の方法は、ビルド後には使えない手法,初期設定には使える.
         //データベース更新
         defaultDatabase.quizDatas = loadedQuizzes;
-        Debug.Log($"MargeQuizzes is {external.Count}");
+        UnityEngine.Debug.Log($"MargeQuizzes is {external.Count}");
     }
-    private void AddQuizes(List<QuizData> external)
+    //新たなクイズデータベースを作成
+    private void ExportCSV(/*List<QuizData> external*/)
     {
+        List<QuizData> external = defaultDatabase.quizDatas;
+        //CSV書き出し
+        // 新しくcsvファイルを作成して、{}の中の要素分csvに追記をする
+        StreamWriter sw = new StreamWriter(Application.streamingAssetsPath +"/"+"AddData.csv", false, Encoding.GetEncoding("UTF-8"));
+        sw.NewLine = "\n"; //   改行をLFに統一(余分な改行を防ぐ)
+        string[] s1 = { "問題番号", "問題文", "選択肢A", "選択肢B", "選択肢C", "選択肢D", "解答(A～D)", "解説", "タグ", "備考" };
+        string s2 = string.Join(",", s1);
+        sw.WriteLine(s2);
+        
+        foreach (QuizData q in external)
+        {
+            string[] quiz = { q.questionNumber.ToString(), q.questionText,string.Join(",",q.choices),q.correctAnswer.ToString(),q.explanation,q.tag };
+            string csvdata = string.Join(",", quiz);
+            sw.WriteLine(csvdata);
+        }
+        //この方法は手動で閉じる
+        sw.Close();
+        UnityEngine.Debug.Log("Export CSV file");
         //新しい情報を持ったアセットの分割(アセットにしなくても良い).
-        var asset = ScriptableObject.CreateInstance<QuizDataBase>();
+        var asset = ScriptableObject.CreateInstance<QuizDataWrapperSO>();
         foreach (var q in external)
         {   
             // 新規追加
             asset.quizDatas.Add(q);
             
         }
-
+        UnityEngine.Debug.Log("Export Quiz Asset");
         //アセットの作成.
-        AssetDatabase.CreateAsset(asset, $"Assets/Scripts/YOKOYAMAScripts/AddData.asset");
+        AssetDatabase.CreateAsset(asset, $"Assets/Quizdata/AddData.asset");
         //アセットの即時保存(CreateAssetでも保存されるが、キャッシュがある場合されない)
         AssetDatabase.SaveAssets();
         //ProjectWindowを再読み込み,変更を適応
@@ -170,23 +189,31 @@ public class QuizDataBaseManager : MonoBehaviour
         EditorUtility.FocusProjectWindow();
         //ProjectWindowのインスペクターに表示するモノをこれにする.
         Selection.activeObject = asset;
-        Debug.Log($"Quizzes is Added of  {external.Count}");
+        UnityEngine.Debug.Log($"Quizzes is Added of  {external.Count}");
     
 }
 }
 
 //エディターを変更宣言.
-[CustomEditor(typeof(QuizDataBaseManager))]
+[CustomEditor(typeof(QuizLoadFromCSV))]
 public class QuizDataBaseInspector : Editor
 {
+    [SerializeField] QuizDataWrapperSO quizList;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
+        QuizLoadFromCSV _manager = target as QuizLoadFromCSV;
 
-        if (GUILayout.Button("Updata CSV file"))
+        if (GUILayout.Button("Load From CSV file"))
         {
-            QuizDataBaseManager _manager = target as QuizDataBaseManager;
+            
             _manager.SendMessage("UpdateCSV", null, SendMessageOptions.DontRequireReceiver);
+            UnityEngine.Debug.Log("Call Update CSV from Editor");
+        }
+        if (GUILayout.Button("Export CSV file"))
+        {
+            _manager.SendMessage("ExportCSV", null,SendMessageOptions.DontRequireReceiver);
+            UnityEngine.Debug.Log("Call Export CSV from Editor");
         }
     }
 }

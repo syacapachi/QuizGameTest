@@ -1,18 +1,70 @@
-using JetBrains.Annotations;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "QuizDataBase")]
-public class QuizDataBase :  ScriptableObject
+
+//ゲームで実際に使われる方
+public class QuizDataWrapper : QuizData
 {
     public List<QuizData> quizDatas = new List<QuizData>();
 
+
+    public List<QuizData> LoadJson(string jsonName)
+    {
+        string filePath = Path.Combine(Application.streamingAssetsPath, jsonName+".json");
+        string json = File.ReadAllText(filePath);
+        if (json == null)
+        {
+            Debug.LogError("Json File is Not Exist");
+        }
+        // 共通部分を読み込み
+        QuizDataWrapper wapper = JsonUtility.FromJson<QuizDataWrapper>(json);
+        List<QuizData> result = new List<QuizData>();
+        foreach (QuizData q in wapper.quizDatas)
+        {
+            //クラス別の派生部分を選択
+            if (q.quiztype == "text")
+            {
+                TextQuizData questiontext = JsonUtility.FromJson<TextQuizData>(JsonUtility.ToJson(q));
+                result.Add(questiontext);
+            }
+            else if (q.quiztype == "image")
+            {
+                ImageQuizData questionimage = JsonUtility.FromJson<ImageQuizData>(JsonUtility.ToJson(q));
+                result.Add(questionimage);
+            }
+        }
+        Debug.Log($"Load from Json count = {result.Count}");
+        quizDatas = result;
+        return result;
+    }
+    public void ExportJson(string jsonname)
+    {
+        QuizDataWrapper wapper = this;
+        wapper.quizDatas = this.quizDatas;
+
+        //一時領域のパス
+        //Application.temporaryCachePath
+
+        //ストリーミングアセットのパス(StreamingAsset直下)
+        //Application.streamingAssetsPath
+
+        //Unityが利用するデータが保存されるパス(Asset直下)
+        //Application.dataPath
+
+        //実行中に保存されるファイルがあるパス
+        //Application.persistentDataPath
+        string json = JsonUtility.ToJson(wapper, true);
+        File.WriteAllText(Application.streamingAssetsPath + "/" + jsonname + ".json", json);
+        Debug.Log($"ExportedJson:\n{json}");
+    }
 }
+
 [System.Serializable]
 public class QuizData 
 {
+    public string quiztype;         //クイズのタイプ
     public int questionNumber;      // 問題番号
     public string questionText;     // 問題文
     public string[] choices;        // 拡張性を持たせられるように配列化
@@ -34,7 +86,7 @@ public class QuizData
     }
     public QuizData()
     {
-
+        
     }
     // 正答判定
     public bool IsCorrect(int answer)
@@ -52,6 +104,8 @@ public class QuizData
 [Serializable]
 public class ImageQuizData : QuizData
 {
+    public string imageurl;
+    public string caption;
 }
 [Serializable]
 public class TextQuizData : QuizData
