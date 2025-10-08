@@ -7,6 +7,7 @@ using UnityEngine;
 //ゲームで実際に使われる方
 public class QuizDataWrapper : QuizData
 {
+    public string quizTitle = "";
     public List<QuizData> quizDatas = new List<QuizData>();
 
 

@@ -574,7 +574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ffa776849487a042aecce5d4d820462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quizDataBase: {fileID: 11400000, guid: 8b5c9620c86047944bd478124190e9c0, type: 2}
+  quizDataBase: {fileID: 11400000, guid: ba63a9156c0e6ab46926cbce12974302, type: 2}
   jsonName: quiz_data
   setupPanel: {fileID: 184397162}
   errorMessage: {fileID: 2097980573}
@@ -764,7 +764,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &184397163
 RectTransform:
   m_ObjectHideFlags: 0
@@ -855,9 +855,9 @@ RectTransform:
   m_Father: {fileID: 718837073}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -1680, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &200629605
 MonoBehaviour:
@@ -2439,7 +2439,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &718837073
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2723,7 +2723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27aec4a1b9dea114eb27a0589b8948c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataDase: {fileID: 0}
+  dataDase: {fileID: 11400000, guid: ba63a9156c0e6ab46926cbce12974302, type: 2}
   jsonLoadpath: quiz_data
   jsonExportName: quiz_data
 --- !u!1 &766917633
@@ -2894,9 +2894,9 @@ RectTransform:
   - {fileID: 180029249}
   m_Father: {fileID: 896380604}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -200}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &769521648
@@ -4250,7 +4250,7 @@ GameObject:
   - component: {fileID: 1041917595}
   - component: {fileID: 1041917594}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SelectText (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4295,7 +4295,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Select GameMode!
+  m_text: Select QuizMode!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd2017f861bc0f847acd4db9c3c02844, type: 2}
   m_sharedMaterial: {fileID: -8106055933808734281, guid: cd2017f861bc0f847acd4db9c3c02844, type: 2}
@@ -4322,7 +4322,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 235.5
+  m_fontSize: 260
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5997,9 +5997,9 @@ RectTransform:
   m_Father: {fileID: 184397163}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -1680, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1479421994
 MonoBehaviour:

@@ -191,7 +191,14 @@ public class QuizLoadFromCSV : MonoBehaviour
         Selection.activeObject = asset;
         UnityEngine.Debug.Log($"Quizzes is Added of  {external.Count}");
     
-}
+    }
+    private void CreateAsset()
+    {
+        if(defaultDatabase == null)
+        {
+
+        }
+    }
 }
 
 //エディターを変更宣言.

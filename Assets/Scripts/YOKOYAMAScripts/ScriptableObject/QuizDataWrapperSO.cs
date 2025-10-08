@@ -10,7 +10,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "QuizDataWrapperSO")]
 public class QuizDataWrapperSO : ScriptableObject
 {
-    public QuizDataSO[] quizDatasSO; 
+    public string quizTitle = "";
+    //public List<QuizDataSO> quizDatasSO = new List<QuizDataSO>(); 
     public List<QuizData> quizDatas = new List<QuizData>();
 
     public List<QuizData> LoadJson(string jsonName)
@@ -41,42 +42,45 @@ public class QuizDataWrapperSO : ScriptableObject
         }
         Debug.Log($"Load from Json count = {result.Count}");
         quizDatas = result;
+        quizTitle = wrapper.quizTitle;
         return result;
     }
     public void ExportJson(string jsonName)
     {
         QuizDataWrapper wrapper = new QuizDataWrapper();
         wrapper.quizDatas = new List<QuizData>();
-        for (int i = 0; i < quizDatas.Count; i++)
-        {
-            if (quizDatasSO[i] is TextQuizDataSO textSO)
-            {
+        //for (int i = 0; i < quizDatasSO.Count; i++)
+        //{
+        //    if (quizDatasSO[i] is TextQuizDataSO textSO)
+        //    {
 
-                wrapper.quizDatas[i] = new TextQuizData
-                {
-                    quiztype = "text",
-                    questionNumber = textSO.questionNumber,
-                    questionText = textSO.questionText,
-                    choices = textSO.choices,
-                    correctAnswer = textSO.correctAnswer,
-                    explanation = textSO.explanation,
-                    tag = textSO.tag
-                };
-            }
-            else if (quizDatasSO[i] is ImageQuizDataSO imageSO)
-            {
-                wrapper.quizDatas[i] = new ImageQuizData
-                {
-                    quiztype = "image",
-                    questionNumber = imageSO.questionNumber,
-                    imageurl = imageSO.questionImage.name + ".png", // Sprite ‚Ì Addressable Key ‚Æ‡‚í‚¹‚é
-                    choices = imageSO.choices,
-                    correctAnswer = imageSO.correctAnswer,
-                    explanation = imageSO.explanation,
-                    tag = imageSO.tag
-                };
-            }
-        }
+        //        wrapper.quizDatas[i] = new TextQuizData
+        //        {
+        //            quiztype = "text",
+        //            questionNumber = textSO.questionNumber,
+        //            questionText = textSO.questionText,
+        //            choices = textSO.choices,
+        //            correctAnswer = textSO.correctAnswer,
+        //            explanation = textSO.explanation,
+        //            tag = textSO.tag
+        //        };
+        //    }
+        //    else if (quizDatasSO[i] is ImageQuizDataSO imageSO)
+        //    {
+        //        wrapper.quizDatas[i] = new ImageQuizData
+        //        {
+        //            quiztype = "image",
+        //            questionNumber = imageSO.questionNumber,
+        //            imageurl = imageSO.questionImage.name + ".png", // Sprite ‚Ì Addressable Key ‚Æ‡‚í‚¹‚é
+        //            choices = imageSO.choices,
+        //            correctAnswer = imageSO.correctAnswer,
+        //            explanation = imageSO.explanation,
+        //            tag = imageSO.tag
+        //        };
+        //    }
+        //}
+        wrapper.quizDatas = quizDatas;
+        wrapper.quizTitle = quizTitle;
         string json = JsonUtility.ToJson(wrapper, true);
         File.WriteAllText(Application.streamingAssetsPath + "/" + jsonName + ".json", json);
         Debug.Log($"ExportedJson:\n{json}");
@@ -112,10 +116,10 @@ public class QuizDadaSOInEditot : Editor
         }
         if(GUILayout.Button("Export Asset file"))
         {
-            foreach (var q in wrapper.quizDatasSO)
-            {
-                q.CreateAsset();
-            }
+            //foreach (var q in wrapper.quizDatasSO)
+            //{
+            //    q.CreateAsset();
+            //}
         }
         //•ÏX‚ð‹–‰Â‚·‚é‚Ý‚½‚¢‚È‚â‚Â
         serializedObject.ApplyModifiedProperties();

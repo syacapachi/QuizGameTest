@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0a0c29c81ff7c04f991b7ff5e8fe9ba, type: 3}
   m_Name: DefaultQuizData Wapper SO
   m_EditorClassIdentifier: 
-  quizDatasSO:
-  - {fileID: 11400000, guid: de28a70b24fc78e4e8ad05432533083e, type: 2}
+  quizTitle: DefaultQuizes
   quizDatas:
   - quiztype: text
     questionNumber: 1
