@@ -1,8 +1,7 @@
 {
-    "quizTitle": "DefaultQuizes",
+    "quizTitle": "NewQuiz",
     "quizDatas": [
         {
-            "quiztype": "text",
             "questionNumber": 1,
             "questionText": "日本の首都はどこですか？",
             "choices": [
@@ -13,10 +12,10 @@
             ],
             "correctAnswer": 0,
             "explanation": "東京は1868年に江戸から改称され、日本の首都となりました。",
-            "tag": "地理\r"
+            "tag": "地理\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 2,
             "questionText": "酒米の王様「山田錦」によく見られる、高精米に耐えやすい特徴を持つ心白形状は次のうち、どれか？",
             "choices": [
@@ -27,10 +26,10 @@
             ],
             "correctAnswer": 1,
             "explanation": "ここに解説を挿入",
-            "tag": "2\r"
+            "tag": "2\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 3,
             "questionText": "太陽系で一番大きい惑星は？",
             "choices": [
@@ -41,10 +40,10 @@
             ],
             "correctAnswer": 2,
             "explanation": "木星は太陽系最大の惑星で、地球の約11倍の直径があります。",
-            "tag": "科学\r"
+            "tag": "科学\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 4,
             "questionText": "「こんにちは」を英語で言うと？",
             "choices": [
@@ -55,10 +54,10 @@
             ],
             "correctAnswer": 1,
             "explanation": "Helloは最も一般的な挨拶の表現です。",
-            "tag": "英語\r"
+            "tag": "英語\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 5,
             "questionText": "富士山の高さは約何メートル？",
             "choices": [
@@ -69,10 +68,10 @@
             ],
             "correctAnswer": 2,
             "explanation": "富士山の標高は3776メートルです。日本最高峰の山です。",
-            "tag": "地理\r"
+            "tag": "地理\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 6,
             "questionText": "2×3は？",
             "choices": [
@@ -83,10 +82,10 @@
             ],
             "correctAnswer": 1,
             "explanation": "掛け算の基本です。2×3=6になります。",
-            "tag": "数学\r"
+            "tag": "数学\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 7,
             "questionText": "日本の通貨単位は？",
             "choices": [
@@ -97,10 +96,10 @@
             ],
             "correctAnswer": 3,
             "explanation": "日本の通貨単位は円（えん）です。",
-            "tag": "経済\r"
+            "tag": "経済\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 8,
             "questionText": "水の化学式は？",
             "choices": [
@@ -111,10 +110,10 @@
             ],
             "correctAnswer": 0,
             "explanation": "水は水素原子2個と酸素原子1個から構成されており、H2Oと表記されます。",
-            "tag": "科学\r"
+            "tag": "科学\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 9,
             "questionText": "「ありがとう」を英語で言うと？",
             "choices": [
@@ -125,10 +124,10 @@
             ],
             "correctAnswer": 2,
             "explanation": "Thank youは感謝を表す基本的な英語表現です。",
-            "tag": "英語\r"
+            "tag": "英語\r",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 10,
             "questionText": "日本で一番長い川は？",
             "choices": [
@@ -139,10 +138,10 @@
             ],
             "correctAnswer": 1,
             "explanation": "信濃川は全長367kmで、日本最長の川です。",
-            "tag": "地理"
+            "tag": "地理",
+            "quiztype": "text"
         },
         {
-            "quiztype": "text",
             "questionNumber": 11,
             "questionText": "日本で一番高い山は？",
             "choices": [
@@ -154,7 +153,50 @@
             ],
             "correctAnswer": 3,
             "explanation": "富士山の標高は3776mで、日本最高峰の山です。",
-            "tag": "地理"
+            "tag": "地理",
+            "quiztype": "text"
+        },
+        {
+            "questionNumber": 12,
+            "questionText": "このサークル創設何年目でしょうか",
+            "choices": [
+                "1年",
+                "2年",
+                "10年",
+                "20年"
+            ],
+            "correctAnswer": 1,
+            "explanation": "デジ創は創設2年目まだまだ新鮮なサークルです",
+            "tag": "サークル",
+            "quiztype": "image"
+        },
+        {
+            "questionNumber": 13,
+            "questionText": "デジタル創作同好会の所属メンバーは",
+            "choices": [
+                "10",
+                "20",
+                "30",
+                "40"
+            ],
+            "correctAnswer": 3,
+            "explanation": "確かこれくらいだったはず",
+            "tag": "サークル",
+            "quiztype": "text"
+        },
+        {
+            "questionNumber": 0,
+            "questionText": "このキャラの名前は",
+            "choices": [
+                "ギダニャン",
+                "ギフダニャン",
+                "ギフネコ",
+                "たま"
+            ],
+            "correctAnswer": 0,
+            "explanation": "某妖怪Oｯﾁで見たような...",
+            "tag": "サークル",
+            "quiztype": "image"
         }
     ]
 }

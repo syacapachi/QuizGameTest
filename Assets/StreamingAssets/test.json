@@ -155,6 +155,21 @@
             "correctAnswer": 3,
             "explanation": "富士山の標高は3776mで、日本最高峰の山です。",
             "tag": "地理"
+        },
+        {
+            "quiztype": "text",
+            "questionNumber": 12,
+            "questionText": "日本で一番高い山は？",
+            "choices": [
+                "燧ケ岳",
+                "北岳",
+                "駒ヶ岳",
+                "富士山",
+                "浅間山"
+            ],
+            "correctAnswer": 3,
+            "explanation": "富士山の標高は3776mで、日本最高峰の山です。",
+            "tag": "地理"
         }
     ]
 }

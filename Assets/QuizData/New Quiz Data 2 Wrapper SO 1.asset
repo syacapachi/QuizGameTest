@@ -9,28 +9,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0a0c29c81ff7c04f991b7ff5e8fe9ba, type: 3}
-  m_Name: DefaultQuizData Wapper SO
-  m_EditorClassIdentifier: 
-  quizTitle: DefaultQuizes
+  m_Script: {fileID: 11500000, guid: bb8280b594ade2d4ebb87dc95a3706f7, type: 3}
+  m_Name: New Quiz Data 2 Wrapper SO 1
+  m_EditorClassIdentifier: Assembly-CSharp::QuizData2WrapperSO
+  quizTitle: NewQuiz
   quizDatas:
-  - rid: 3798930630723502438
-  - rid: 3798930630723502439
-  - rid: 3798930630723502440
-  - rid: 3798930630723502441
-  - rid: 3798930630723502442
-  - rid: 3798930630723502443
-  - rid: 3798930630723502444
-  - rid: 3798930630723502445
-  - rid: 3798930630723502446
-  - rid: 3798930630723502447
-  - rid: 3798930630723502448
-  - rid: 3798930630723502495
+  - rid: 3798930630723502350
+  - rid: 3798930630723502351
+  - rid: 3798930630723502352
+  - rid: 3798930630723502353
+  - rid: 3798930630723502354
+  - rid: 3798930630723502355
+  - rid: 3798930630723502356
+  - rid: 3798930630723502357
+  - rid: 3798930630723502358
+  - rid: 3798930630723502359
+  - rid: 3798930630723502360
+  - rid: 3798930630723502361
+  - rid: 3798930630723502362
+  - rid: 3798930630723502363
   references:
     version: 2
     RefIds:
-    - rid: 3798930630723502438
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502350
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 1
         questionText: "\u65E5\u672C\u306E\u9996\u90FD\u306F\u3069\u3053\u3067\u3059\u304B\uFF1F"
@@ -43,9 +45,9 @@ MonoBehaviour:
         explanation: "\u6771\u4EAC\u306F1868\u5E74\u306B\u6C5F\u6238\u304B\u3089\u6539\u79F0\u3055\u308C\u3001\u65E5\u672C\u306E\u9996\u90FD\u3068\u306A\u308A\u307E\u3057\u305F\u3002"
         tag: "\u5730\u7406\r"
         quiztype: text
-        questiontext: 
-    - rid: 3798930630723502439
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+        questiontext: AA
+    - rid: 3798930630723502351
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 2
         questionText: "\u9152\u7C73\u306E\u738B\u69D8\u300C\u5C71\u7530\u9326\u300D\u306B\u3088\u304F\u898B\u3089\u308C\u308B\u3001\u9AD8\u7CBE\u7C73\u306B\u8010\u3048\u3084\u3059\u3044\u7279\u5FB4\u3092\u6301\u3064\u5FC3\u767D\u5F62\u72B6\u306F\u6B21\u306E\u3046\u3061\u3001\u3069\u308C\u304B\uFF1F"
@@ -59,8 +61,8 @@ MonoBehaviour:
         tag: "2\r"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502440
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502352
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 3
         questionText: "\u592A\u967D\u7CFB\u3067\u4E00\u756A\u5927\u304D\u3044\u60D1\u661F\u306F\uFF1F"
@@ -74,8 +76,8 @@ MonoBehaviour:
         tag: "\u79D1\u5B66\r"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502441
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502353
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 4
         questionText: "\u300C\u3053\u3093\u306B\u3061\u306F\u300D\u3092\u82F1\u8A9E\u3067\u8A00\u3046\u3068\uFF1F"
@@ -89,8 +91,8 @@ MonoBehaviour:
         tag: "\u82F1\u8A9E\r"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502442
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502354
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 5
         questionText: "\u5BCC\u58EB\u5C71\u306E\u9AD8\u3055\u306F\u7D04\u4F55\u30E1\u30FC\u30C8\u30EB\uFF1F"
@@ -104,8 +106,8 @@ MonoBehaviour:
         tag: "\u5730\u7406\r"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502443
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502355
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 6
         questionText: "2\xD73\u306F\uFF1F"
@@ -119,8 +121,8 @@ MonoBehaviour:
         tag: "\u6570\u5B66\r"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502444
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502356
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 7
         questionText: "\u65E5\u672C\u306E\u901A\u8CA8\u5358\u4F4D\u306F\uFF1F"
@@ -134,8 +136,8 @@ MonoBehaviour:
         tag: "\u7D4C\u6E08\r"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502445
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502357
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 8
         questionText: "\u6C34\u306E\u5316\u5B66\u5F0F\u306F\uFF1F"
@@ -149,8 +151,8 @@ MonoBehaviour:
         tag: "\u79D1\u5B66\r"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502446
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502358
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 9
         questionText: "\u300C\u3042\u308A\u304C\u3068\u3046\u300D\u3092\u82F1\u8A9E\u3067\u8A00\u3046\u3068\uFF1F"
@@ -164,8 +166,8 @@ MonoBehaviour:
         tag: "\u82F1\u8A9E\r"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502447
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502359
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 10
         questionText: "\u65E5\u672C\u3067\u4E00\u756A\u9577\u3044\u5DDD\u306F\uFF1F"
@@ -179,8 +181,8 @@ MonoBehaviour:
         tag: "\u5730\u7406"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502448
-      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502360
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 11
         questionText: "\u65E5\u672C\u3067\u4E00\u756A\u9AD8\u3044\u5C71\u306F\uFF1F"
@@ -195,10 +197,43 @@ MonoBehaviour:
         tag: "\u5730\u7406"
         quiztype: text
         questiontext: 
-    - rid: 3798930630723502495
-      type: {class: ImageQuizData, ns: , asm: Assembly-CSharp}
+    - rid: 3798930630723502361
+      type: {class: ImageQuizData2, ns: , asm: Assembly-CSharp}
       data:
         questionNumber: 12
+        questionText: "\u3053\u306E\u30B5\u30FC\u30AF\u30EB\u5275\u8A2D\u4F55\u5E74\u76EE\u3067\u3057\u3087\u3046\u304B"
+        choices:
+        - "1\u5E74"
+        - "2\u5E74"
+        - "10\u5E74"
+        - "20\u5E74"
+        correctAnswer: 1
+        explanation: "\u30C7\u30B8\u5275\u306F\u5275\u8A2D2\u5E74\u76EE\u307E\u3060\u307E\u3060\u65B0\u9BAE\u306A\u30B5\u30FC\u30AF\u30EB\u3067\u3059"
+        tag: "\u30B5\u30FC\u30AF\u30EB"
+        quiztype: image
+        quizImage: {fileID: 0}
+        imagePath: Assets/StreamingAssets/ImageData/Gidanyan.png
+        isUrlImage: 0
+        caption: TestCaption
+    - rid: 3798930630723502362
+      type: {class: TextQuizData2, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 13
+        questionText: "\u30C7\u30B8\u30BF\u30EB\u5275\u4F5C\u540C\u597D\u4F1A\u306E\u6240\u5C5E\u30E1\u30F3\u30D0\u30FC\u306F"
+        choices:
+        - 10
+        - 20
+        - 30
+        - 40
+        correctAnswer: 3
+        explanation: "\u78BA\u304B\u3053\u308C\u304F\u3089\u3044\u3060\u3063\u305F\u306F\u305A"
+        tag: "\u30B5\u30FC\u30AF\u30EB"
+        quiztype: text
+        questiontext: EE
+    - rid: 3798930630723502363
+      type: {class: ImageQuizData2, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 0
         questionText: "\u3053\u306E\u30AD\u30E3\u30E9\u306E\u540D\u524D\u306F"
         choices:
         - "\u30AE\u30C0\u30CB\u30E3\u30F3"
@@ -207,7 +242,7 @@ MonoBehaviour:
         - "\u305F\u307E"
         correctAnswer: 0
         explanation: "\u67D0\u5996\u602AO\uFF6F\uFF81\u3067\u898B\u305F\u3088\u3046\u306A..."
-        tag: "\u5C90\u961C\u5927\u5B66"
+        tag: "\u30B5\u30FC\u30AF\u30EB"
         quiztype: image
         quizImage: {fileID: 0}
         imagePath: Assets/StreamingAssets/ImageData/Gidanyan.png

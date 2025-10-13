@@ -1,4 +1,11 @@
 {
+    "quiztype": "",
+    "questionNumber": 0,
+    "questionText": "",
+    "choices": [],
+    "correctAnswer": 0,
+    "explanation": "",
+    "tag": "",
     "quizTitle": "DefaultQuizes",
     "quizDatas": [
         {

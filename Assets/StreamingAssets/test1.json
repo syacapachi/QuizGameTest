@@ -2,8 +2,8 @@
     "quizTitle": "DefaultQuizes",
     "quizDatas": [
         {
-            "quiztype": "text",
             "questionNumber": 1,
+            "quiztype": "text",
             "questionText": "日本の首都はどこですか？",
             "choices": [
                 "東京",
@@ -16,8 +16,8 @@
             "tag": "地理\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 2,
+            "quiztype": "text",
             "questionText": "酒米の王様「山田錦」によく見られる、高精米に耐えやすい特徴を持つ心白形状は次のうち、どれか？",
             "choices": [
                 "眼状心白",
@@ -30,8 +30,8 @@
             "tag": "2\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 3,
+            "quiztype": "text",
             "questionText": "太陽系で一番大きい惑星は？",
             "choices": [
                 "地球",
@@ -44,8 +44,8 @@
             "tag": "科学\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 4,
+            "quiztype": "text",
             "questionText": "「こんにちは」を英語で言うと？",
             "choices": [
                 "Good morning",
@@ -58,8 +58,8 @@
             "tag": "英語\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 5,
+            "quiztype": "text",
             "questionText": "富士山の高さは約何メートル？",
             "choices": [
                 "2776m",
@@ -72,8 +72,8 @@
             "tag": "地理\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 6,
+            "quiztype": "text",
             "questionText": "2×3は？",
             "choices": [
                 "5",
@@ -86,8 +86,8 @@
             "tag": "数学\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 7,
+            "quiztype": "text",
             "questionText": "日本の通貨単位は？",
             "choices": [
                 "ドル",
@@ -100,8 +100,8 @@
             "tag": "経済\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 8,
+            "quiztype": "text",
             "questionText": "水の化学式は？",
             "choices": [
                 "H2O",
@@ -114,8 +114,8 @@
             "tag": "科学\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 9,
+            "quiztype": "text",
             "questionText": "「ありがとう」を英語で言うと？",
             "choices": [
                 "Sorry",
@@ -128,8 +128,8 @@
             "tag": "英語\r"
         },
         {
-            "quiztype": "text",
             "questionNumber": 10,
+            "quiztype": "text",
             "questionText": "日本で一番長い川は？",
             "choices": [
                 "利根川",
@@ -142,8 +142,23 @@
             "tag": "地理"
         },
         {
-            "quiztype": "text",
             "questionNumber": 11,
+            "quiztype": "text",
+            "questionText": "日本で一番高い山は？",
+            "choices": [
+                "燧ケ岳",
+                "北岳",
+                "駒ヶ岳",
+                "富士山",
+                "浅間山"
+            ],
+            "correctAnswer": 3,
+            "explanation": "富士山の標高は3776mで、日本最高峰の山です。",
+            "tag": "地理"
+        },
+        {
+            "questionNumber": 12,
+            "quiztype": "text",
             "questionText": "日本で一番高い山は？",
             "choices": [
                 "燧ケ岳",

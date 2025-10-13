@@ -1,0 +1,328 @@
+{
+    "quizTitle": "DefaultQuizes",
+    "quizDatas": [
+        {
+            "rid": 1000
+        },
+        {
+            "rid": 1001
+        },
+        {
+            "rid": 1002
+        },
+        {
+            "rid": 1003
+        },
+        {
+            "rid": 1004
+        },
+        {
+            "rid": 1005
+        },
+        {
+            "rid": 1006
+        },
+        {
+            "rid": 1007
+        },
+        {
+            "rid": 1008
+        },
+        {
+            "rid": 1009
+        },
+        {
+            "rid": 1010
+        },
+        {
+            "rid": 1011
+        }
+    ],
+    "references": {
+        "version": 2,
+        "RefIds": [
+            {
+                "rid": 1000,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 1,
+                    "questionText": "日本の首都はどこですか？",
+                    "choices": [
+                        "東京",
+                        "大阪",
+                        "京都",
+                        "名古屋"
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "東京は1868年に江戸から改称され、日本の首都となりました。",
+                    "tag": "地理\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1001,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 2,
+                    "questionText": "酒米の王様「山田錦」によく見られる、高精米に耐えやすい特徴を持つ心白形状は次のうち、どれか？",
+                    "choices": [
+                        "眼状心白",
+                        "線状心白",
+                        "点状心白",
+                        "無心白"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "ここに解説を挿入",
+                    "tag": "2\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1002,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 3,
+                    "questionText": "太陽系で一番大きい惑星は？",
+                    "choices": [
+                        "地球",
+                        "火星",
+                        "木星",
+                        "土星"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "木星は太陽系最大の惑星で、地球の約11倍の直径があります。",
+                    "tag": "科学\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1003,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 4,
+                    "questionText": "「こんにちは」を英語で言うと？",
+                    "choices": [
+                        "Good morning",
+                        "Hello",
+                        "Good evening",
+                        "Good night"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "Helloは最も一般的な挨拶の表現です。",
+                    "tag": "英語\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1004,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 5,
+                    "questionText": "富士山の高さは約何メートル？",
+                    "choices": [
+                        "2776m",
+                        "3276m",
+                        "3776m",
+                        "4276m"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "富士山の標高は3776メートルです。日本最高峰の山です。",
+                    "tag": "地理\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1005,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 6,
+                    "questionText": "2×3は？",
+                    "choices": [
+                        "5",
+                        "6",
+                        "7",
+                        "8"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "掛け算の基本です。2×3=6になります。",
+                    "tag": "数学\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1006,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 7,
+                    "questionText": "日本の通貨単位は？",
+                    "choices": [
+                        "ドル",
+                        "ユーロ",
+                        "ウォン",
+                        "円"
+                    ],
+                    "correctAnswer": 3,
+                    "explanation": "日本の通貨単位は円（えん）です。",
+                    "tag": "経済\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1007,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 8,
+                    "questionText": "水の化学式は？",
+                    "choices": [
+                        "H2O",
+                        "CO2",
+                        "O2",
+                        "N2"
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "水は水素原子2個と酸素原子1個から構成されており、H2Oと表記されます。",
+                    "tag": "科学\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1008,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 9,
+                    "questionText": "「ありがとう」を英語で言うと？",
+                    "choices": [
+                        "Sorry",
+                        "Please",
+                        "Thank you",
+                        "Excuse me"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "Thank youは感謝を表す基本的な英語表現です。",
+                    "tag": "英語\r",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1009,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 10,
+                    "questionText": "日本で一番長い川は？",
+                    "choices": [
+                        "利根川",
+                        "信濃川",
+                        "石狩川",
+                        "天竜川"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "信濃川は全長367kmで、日本最長の川です。",
+                    "tag": "地理",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1010,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 11,
+                    "questionText": "日本で一番高い山は？",
+                    "choices": [
+                        "燧ケ岳",
+                        "北岳",
+                        "駒ヶ岳",
+                        "富士山",
+                        "浅間山"
+                    ],
+                    "correctAnswer": 3,
+                    "explanation": "富士山の標高は3776mで、日本最高峰の山です。",
+                    "tag": "地理",
+                    "quiztype": "text",
+                    "questiontext": ""
+                }
+            },
+            {
+                "rid": 1011,
+                "type": {
+                    "class": "ImageQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 12,
+                    "questionText": "このキャラの名前は",
+                    "choices": [
+                        "ギダニャン",
+                        "ギフダニャン",
+                        "ギフネコ",
+                        "たま"
+                    ],
+                    "correctAnswer": 0,
+                    "explanation": "某妖怪Oｯﾁで見たような...",
+                    "tag": "岐阜大学",
+                    "quiztype": "image",
+                    "quizImage": {
+                        "instanceID": 0
+                    },
+                    "imagePath": "Assets/StreamingAssets/ImageData/Gidanyan.png",
+                    "isUrlImage": false,
+                    "caption": "BB"
+                }
+            }
+        ]
+    }
+}
