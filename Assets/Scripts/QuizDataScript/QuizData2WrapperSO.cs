@@ -120,9 +120,12 @@ public class QuizData2WrapperSO : ScriptableObject
                     }
                     else
                     {
-                        // ローカル（Resources）からロード
+
                         string resPath = Path.GetFileNameWithoutExtension(questionimage.imagePath);
-                        questionimage.quizImage = Resources.Load<Sprite>(resPath);
+                        byte[] imagebynary = await File.ReadAllBytesAsync(resPath);
+                        Texture2D loadTexture = new Texture2D(2, 2);
+                        loadTexture.LoadImage(imagebynary);
+                        questionimage.quizImage = Sprite.Create(loadTexture,new Rect(0,0,loadTexture.width,loadTexture.height),Vector2.zero);
                     }
                 }
                 result.Add(questionimage);

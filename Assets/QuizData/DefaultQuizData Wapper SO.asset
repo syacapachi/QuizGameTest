@@ -209,7 +209,7 @@ MonoBehaviour:
         explanation: "\u67D0\u5996\u602AO\uFF6F\uFF81\u3067\u898B\u305F\u3088\u3046\u306A..."
         tag: "\u5C90\u961C\u5927\u5B66"
         quiztype: image
-        quizImage: {fileID: 0}
-        imagePath: Assets/StreamingAssets/ImageData/Gidanyan.png
+        quizImage: {fileID: 21300000, guid: fb13d2d235c0b954c90086f7e8f81211, type: 3}
+        imageName: GbgXRmdbkAAdUdu-removebg-preview.png
         isUrlImage: 0
         caption: BB

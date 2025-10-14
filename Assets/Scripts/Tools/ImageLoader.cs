@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using UnityEngine.Networking;
 using UnityEngine;
 using System.Collections;
@@ -19,9 +19,28 @@ public static class ImageLoader
             }
             else
             {
-                Debug.LogError($"âÊëúÉçÅ[Éhé∏îs: {req.error}");
+                Debug.LogError($"ÁîªÂÉè„É≠„Éº„ÉâÂ§±Êïó: {req.error}");
                 onLoaded?.Invoke(null);
             }
         }
+    }
+    public static Sprite SpriteFromByteArray(byte[] bytes)
+    {
+        Debug.Log("SpriteFromByteArray Call");
+        Texture2D loadTexture = new Texture2D(2, 2);
+        if (!loadTexture.LoadImage(bytes))
+        {
+            Debug.LogWarning("‚ö† LoadImage failed");
+            return null;
+        }
+
+        Debug.Log("Create Sprite Data");
+        Sprite Image = Sprite.Create(
+            loadTexture,
+            new Rect(0, 0, loadTexture.width, loadTexture.height),
+            Vector2.zero
+        );
+        Debug.Log("Task End ");
+        return Image;
     }
 }

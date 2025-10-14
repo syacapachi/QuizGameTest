@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -16,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI errorMessage;
     [Header("出題画面")]
     [SerializeField] TextMeshProUGUI questionText;
+    [SerializeField] Image QuizImage;
     [Header("回答ボタンプレハブ")]
     [SerializeField] GameObject ButtonParent;
     [SerializeField] GameObject ButtonPrefab;
@@ -66,14 +69,15 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        quizData = QuizLoadFromJson(jsonName);
+        Task.Run(() => QuizLoadFromJson(jsonName));
         SetUpUI();
         ShowSetup();
         
     }
-    public List<QuizData> QuizLoadFromJson(string jsonpath)
+    public async Task QuizLoadFromJson(string jsonpath)
     {
-        return wrapper.LoadJson(jsonpath);
+        var result = await wrapper.LoadJsonAsync(jsonpath);
+        quizData = result;
     }
 
     public void StartQuiz()
@@ -150,6 +154,12 @@ public class GameManager : MonoBehaviour
         quizindex++;
         currentQuiz = quizdata;
         questionText.text = quizdata.questionText;
+        ImageQuizData x = quizdata as ImageQuizData;
+
+        if(x != null)
+        {
+            QuizImage.sprite = x.quizImage;
+        }
         //GetType()で分岐処理
         progressText.text = quizindex.ToString() + "/" + sortQuizData.Count + "   QuizType:"+quizdata.GetType() ;
         

@@ -1,13 +1,15 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-//Editor‚ÅƒNƒCƒYƒf[ƒ^‚ğì‚é—p
-//ƒAƒ^ƒbƒ`‚·‚é‚½‚ß‚É‚ÍA1ƒtƒ@ƒCƒ‹,1UnityŠÖ˜AƒNƒ‰ƒX(ƒtƒ@ƒCƒ‹–¼‚Æˆê’v)
-//Œ³‚Ì‚â‚Â‚Æ\¬‚Í“¯‚¶‚É‚·‚é‚±‚Æ
+//Editorã§ã‚¯ã‚¤ã‚ºãƒ‡ãƒ¼ã‚¿ã‚’ä½œã‚‹æ™‚ç”¨
+//ã‚¢ã‚¿ãƒƒãƒã™ã‚‹ãŸã‚ã«ã¯ã€1ãƒ•ã‚¡ã‚¤ãƒ«,1Unityé–¢é€£ã‚¯ãƒ©ã‚¹(ãƒ•ã‚¡ã‚¤ãƒ«åã¨ä¸€è‡´)
+//å…ƒã®ã‚„ã¤ã¨æ§‹æˆã¯åŒã˜ã«ã™ã‚‹ã“ã¨
 [CreateAssetMenu(menuName = "QuizDataWrapperSO")]
 public class QuizDataWrapperSO : ScriptableObject
 {
@@ -16,7 +18,7 @@ public class QuizDataWrapperSO : ScriptableObject
     [SerializeReference,SerializeReferenceView(typeof(QuizData))]
     public QuizData[] quizDatas ;
 
-    public List<QuizData> LoadJson(string jsonName)
+    public async Task<List<QuizData>> LoadJson(string jsonName)
     {
         string filePath = Path.Combine(Application.streamingAssetsPath, jsonName+".json");
         string textdata = File.ReadAllText(filePath);
@@ -24,7 +26,7 @@ public class QuizDataWrapperSO : ScriptableObject
         {
             Debug.LogError("Json File is Not Exist");
         }
-        // ‹¤’Ê•”•ª‚ğ“Ç‚İ‚İ
+        // å…±é€šéƒ¨åˆ†ã‚’èª­ã¿è¾¼ã¿
         QuizDataWrapper wrapper = JsonUtility.FromJson<QuizDataWrapper>(textdata);
 
         Debug.Log($"wrapperLoad:{JsonUtility.ToJson(wrapper,true)}");//OK
@@ -34,7 +36,7 @@ public class QuizDataWrapperSO : ScriptableObject
         {
             //Debug.Log($"q:{q}");
             Debug.Log($"q.quiztype:{q.quiztype}");//Null
-            //ƒNƒ‰ƒX•Ê‚Ì”h¶•”•ª‚ğ‘I‘ğ
+            //ã‚¯ãƒ©ã‚¹åˆ¥ã®æ´¾ç”Ÿéƒ¨åˆ†ã‚’é¸æŠ
             if (q.quiztype == Quiztype.text.ToString())
             {
                 TextQuizData questiontext = JsonUtility.FromJson<TextQuizData>(JsonUtility.ToJson(q));
@@ -43,6 +45,44 @@ public class QuizDataWrapperSO : ScriptableObject
             else if (q.quiztype == Quiztype.image.ToString())
             {
                 ImageQuizData questionimage = JsonUtility.FromJson<ImageQuizData>(JsonUtility.ToJson(q));
+                if (!string.IsNullOrEmpty(questionimage.imageName))
+                {
+                    
+                    Debug.Log("Image Loading...");
+                    string folderPath = Path.Combine("ImageData", questionimage.imageName);
+                    string fullPath = Path.Combine(Application.streamingAssetsPath, folderPath);
+                    Debug.Log(fullPath);
+                    // ãƒ•ã‚¡ã‚¤ãƒ«å­˜åœ¨ãƒã‚§ãƒƒã‚¯
+                    if (!File.Exists(fullPath))
+                    {
+                        Debug.LogError($"âŒ File not found: {fullPath}");
+                    }
+                    byte[] imageBinary = File.ReadAllBytes(fullPath);//Editorã§ã¯åŒæœŸå‡¦ç†
+                    Debug.Log($"âœ… Image Loaded ({imageBinary.Length} bytes)");
+
+                    questionimage.quizImage = ImageLoader.SpriteFromByteArray(imageBinary);
+
+                    ////ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
+                    //SynchronizationContext _mainContext;
+                    //_mainContext = SynchronizationContext.Current;
+                    //_mainContext.Post(_ =>
+                    //{
+                    //   questionimage.quizImage = ImageLoader.SpriteFromByteArray(imageBinary);
+                    //}, null);
+#if UNITY_EDITOR
+                    // Editorç”¨ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼åæ˜ 
+                    var so = new SerializedObject(this);
+                    so.Update();
+                    // EditorSpriteã«ã¯Editorä¸Šã§è¡¨ç¤ºã—ãŸã„ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã‚’åæ˜ 
+                    typeof(ImageQuizData)
+                        //å¤‰æ•°ã‚’ã•ãŒã™ã€NonPublic && Instanceã§ã€private,protectedå¤‰æ•°ã‚‚å¯èƒ½
+                        .GetField("quizImage", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?
+                        //å®‰å…¨ã«ä»£å…¥ImageQuizData questuinimage,quizImage = å³è¾ºï¼›(åŒã˜å€¤ã‚’å†ä»£å…¥)
+                        .SetValue(questionimage, questionimage.quizImage);
+#endif
+
+
+                }
                 result.Add(questionimage);
             }
         }
@@ -53,7 +93,7 @@ public class QuizDataWrapperSO : ScriptableObject
     }
     public void ExportJson(string jsonName)
     {
-        //SO‚Å‚Í‚È‚­A³‚µ‚¢ƒf[ƒ^‚ğg—p
+        //SOã§ã¯ãªãã€æ­£ã—ã„ãƒ‡ãƒ¼ã‚¿ã‚’ä½¿ç”¨
         QuizDataWrapper wrapper = new QuizDataWrapper();
         wrapper.quizTitle = quizTitle;
         
@@ -62,22 +102,39 @@ public class QuizDataWrapperSO : ScriptableObject
         {
             if (q is ImageQuizData imgQ && imgQ.quizImage != null)
             {
-                // Sprite‚ªİ’è‚³‚ê‚Ä‚¢‚éê‡A‚»‚ÌƒpƒX‚ğimagePath‚É‘‚«‚Ş
-                string path = AssetDatabase.GetAssetPath(imgQ.quizImage);
-                if (!string.IsNullOrEmpty(path))
+                // SpriteãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹å ´åˆã€StreamingAssetsã«ç§»å‹•ã—ãƒ‘ã‚¹ã‚’imagePathã«æ›¸ãè¾¼ã‚€
+                // Assetä»¥ä¸‹ã®ãƒ‘ã‚¹
+                string AssetPath = AssetDatabase.GetAssetPath(imgQ.quizImage);
+                string fileName = Path.GetFileName(AssetPath);
+                //çµ¶å¯¾ãƒ‘ã‚¹E://
+                string exportDir = Path.Combine(Application.streamingAssetsPath, "ImageData");
+                if (!Directory.Exists(exportDir))
+                    Directory.CreateDirectory(exportDir);
+
+                string exportPath = Path.Combine(exportDir, fileName);
+                Debug.Log(AssetPath +"\n"+ exportPath);
+                if (!File.Exists(exportPath))
                 {
-                    imgQ.imagePath = path;
-                    imgQ.isUrlImage = path.StartsWith("http");
+                    File.Copy(AssetPath, exportPath);
+                    Debug.Log($"âœ… Copied image to StreamingAssets: {exportPath}");
+                }
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    imgQ.imageName = fileName;
+                    imgQ.isUrlImage = fileName.StartsWith("http");
                 }
             }
             list.Add(q);
         }
         wrapper.quizDatas = quizDatas.ToArray();
         string json = JsonUtility.ToJson(wrapper, true);
-        File.WriteAllText(Application.streamingAssetsPath + "/" + jsonName + ".json", json);
-        Debug.Log($"ExportedJson:\n{json}");
-        //ProjectWindow‚ğÄ“Ç‚İ‚İ,•ÏX‚ğ“K‰
+        string writePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".json");
+        File.WriteAllText(writePath, json);
+        Debug.Log($"ExportedJson:\n{json}at{writePath}");
+#if UNITY_EDITOR
+        //ProjectWindowã‚’å†èª­ã¿è¾¼ã¿,å¤‰æ›´ã‚’é©å¿œ
         AssetDatabase.Refresh();
+#endif
     }
     
 }
@@ -87,7 +144,7 @@ public class QuizDataWrapperSO : ScriptableObject
 [CustomEditor(typeof(QuizDataWrapperSO))]
 public class QuizDadaSOInEditot : Editor
 {
-    //ƒNƒ‰ƒX‚Ìƒƒ“ƒo[‚¶‚á–³‚¢‚ÆXV‚Å‚«‚È‚¢
+    //ã‚¯ãƒ©ã‚¹ã®ãƒ¡ãƒ³ãƒãƒ¼ã˜ã‚ƒç„¡ã„ã¨æ›´æ–°ã§ããªã„
     string loadJsonFileName = "loadJsonFileName";
     string exportJsonFileName = "exportJsonFileName";
 
@@ -102,7 +159,7 @@ public class QuizDadaSOInEditot : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        //•ÏX‚ğã‘‚«‚·‚é‚â‚Â
+        //å¤‰æ›´ã‚’ä¸Šæ›¸ãã™ã‚‹ã‚„ã¤
         serializedObject.Update();
         //int index = Mathf.Max(0, System.Array.IndexOf(quizTypeOptions, quizTypeStringProp.stringValue));
         //int newIndex = EditorGUILayout.Popup("Quiz Type", index, quizTypeOptions);
@@ -124,7 +181,7 @@ public class QuizDadaSOInEditot : Editor
         {
             wrapper.ExportJson(exportJsonFileName);
         }
-        //•ÏX‚ğ‹–‰Â‚·‚é‚İ‚½‚¢‚È‚â‚Â
+        //å¤‰æ›´ã‚’è¨±å¯ã™ã‚‹ã¿ãŸã„ãªã‚„ã¤
         serializedObject.ApplyModifiedProperties();
     }
 }

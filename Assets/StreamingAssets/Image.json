@@ -1,5 +1,5 @@
 {
-    "quizTitle": "DefaultQuizes",
+    "quizTitle": "NewQuiz",
     "quizDatas": [
         {
             "rid": 1000
@@ -36,15 +36,33 @@
         },
         {
             "rid": 1011
+        },
+        {
+            "rid": 1012
+        },
+        {
+            "rid": 1013
+        },
+        {
+            "rid": -2
         }
     ],
     "references": {
         "version": 2,
         "RefIds": [
             {
+                "rid": -2,
+                "type": {
+                    "class": "",
+                    "ns": "",
+                    "asm": ""
+                },
+                "data": {}
+            },
+            {
                 "rid": 1000,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -61,13 +79,13 @@
                     "explanation": "東京は1868年に江戸から改称され、日本の首都となりました。",
                     "tag": "地理\r",
                     "quiztype": "text",
-                    "questiontext": ""
+                    "questiontext": "AA"
                 }
             },
             {
                 "rid": 1001,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -90,7 +108,7 @@
             {
                 "rid": 1002,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -113,7 +131,7 @@
             {
                 "rid": 1003,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -136,7 +154,7 @@
             {
                 "rid": 1004,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -159,7 +177,7 @@
             {
                 "rid": 1005,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -182,7 +200,7 @@
             {
                 "rid": 1006,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -205,7 +223,7 @@
             {
                 "rid": 1007,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -228,7 +246,7 @@
             {
                 "rid": 1008,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -251,7 +269,7 @@
             {
                 "rid": 1009,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -274,7 +292,7 @@
             {
                 "rid": 1010,
                 "type": {
-                    "class": "TextQuizData",
+                    "class": "TextQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
@@ -298,12 +316,63 @@
             {
                 "rid": 1011,
                 "type": {
-                    "class": "ImageQuizData",
+                    "class": "ImageQuizData2",
                     "ns": "",
                     "asm": "Assembly-CSharp"
                 },
                 "data": {
                     "questionNumber": 12,
+                    "questionText": "このサークル創設何年目でしょうか",
+                    "choices": [
+                        "1年",
+                        "2年",
+                        "10年",
+                        "20年"
+                    ],
+                    "correctAnswer": 1,
+                    "explanation": "デジ創は創設2年目まだまだ新鮮なサークルです",
+                    "tag": "サークル",
+                    "quiztype": "image",
+                    "quizImage": {
+                        "instanceID": 44940
+                    },
+                    "imagePath": "Assets/ImageData/l_mm_E20.jpg",
+                    "isUrlImage": false,
+                    "caption": "TestCaption"
+                }
+            },
+            {
+                "rid": 1012,
+                "type": {
+                    "class": "TextQuizData2",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 13,
+                    "questionText": "デジタル創作同好会の所属メンバーは",
+                    "choices": [
+                        "10",
+                        "20",
+                        "30",
+                        "40"
+                    ],
+                    "correctAnswer": 3,
+                    "explanation": "確かこれくらいだったはず",
+                    "tag": "サークル",
+                    "quiztype": "text",
+                    "questiontext": "EE"
+                }
+            },
+            {
+                "rid": 1013,
+                "type": {
+                    "class": "ImageQuizData2",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 14,
                     "questionText": "このキャラの名前は",
                     "choices": [
                         "ギダニャン",
@@ -313,12 +382,12 @@
                     ],
                     "correctAnswer": 0,
                     "explanation": "某妖怪Oｯﾁで見たような...",
-                    "tag": "岐阜大学",
+                    "tag": "サークル",
                     "quiztype": "image",
                     "quizImage": {
-                        "instanceID": 44932
+                        "instanceID": 44904
                     },
-                    "imageName": "GbgXRmdbkAAdUdu.jpg",
+                    "imagePath": "Assets/ImageData/GbgXRmdbkAAdUdu.jpg",
                     "isUrlImage": false,
                     "caption": "BB"
                 }

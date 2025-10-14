@@ -30,7 +30,7 @@ public class SerializeReferenceViewDrawer : PropertyDrawer
             // クラス名をタイトルに表示
             var type = property.managedReferenceValue.GetType();
             Rect headerRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-            EditorGUI.LabelField(headerRect, $"▶ {type.Name}", EditorStyles.boldLabel);
+            EditorGUI.LabelField(headerRect, $" {type.Name}", EditorStyles.boldLabel);
 
             // 削除ボタン 属性をnullにして更新
             Rect btnRect = new Rect(position.x + position.width - 60, position.y, 60, EditorGUIUtility.singleLineHeight);

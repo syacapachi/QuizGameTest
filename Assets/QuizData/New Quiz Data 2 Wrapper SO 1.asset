@@ -212,7 +212,7 @@ MonoBehaviour:
         tag: "\u30B5\u30FC\u30AF\u30EB"
         quiztype: image
         quizImage: {fileID: 0}
-        imagePath: Assets/StreamingAssets/ImageData/Gidanyan.png
+        imagePath: StreamingAssets/ImageData/Gidanyan.png
         isUrlImage: 0
         caption: TestCaption
     - rid: 3798930630723502362

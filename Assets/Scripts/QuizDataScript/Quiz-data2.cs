@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -42,6 +43,58 @@ public class QuizData2Wrapper
         Debug.Log($"Load from Json count = {result.Count}");
         quizTitle = wapper.quizTitle;
         quizDatas = result.ToArray();
+        return result;
+    }
+    public async Task<List<QuizData2>> LoadJsonAsync(string jsonName)
+    {
+        string filePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".json");
+        string textdata = File.ReadAllText(filePath);
+        if (textdata == null)
+        {
+            Debug.LogError("Json File is Not Exist");
+        }
+        // 共通部分を読み込み
+        QuizData2Wrapper wrapper = JsonUtility.FromJson<QuizData2Wrapper>(textdata);
+
+        //Debug.Log($"wrapperLoad:{JsonUtility.ToJson(wrapper, true)}");//OK
+        List<QuizData2> result = new List<QuizData2>();
+        //List<QuizDataSO> resultSO = new List<QuizDataSO>();
+        foreach (QuizData2 q in wrapper.quizDatas)
+        {
+            //Debug.Log($"q:{q}");
+            Debug.Log($"q.quiztype:{q.quiztype}");//Null
+            //クラス別の派生部分を選択(要素をいったんTextに直してからリロード)
+            if (q.quiztype == Quiztype.text.ToString())
+            {
+                TextQuizData2 questiontext = JsonUtility.FromJson<TextQuizData2>(JsonUtility.ToJson(q));
+                result.Add(questiontext);
+            }
+            else if (q.quiztype == Quiztype.image.ToString())
+            {
+                ImageQuizData2 questionimage = JsonUtility.FromJson<ImageQuizData2>(JsonUtility.ToJson(q));
+                if (!string.IsNullOrEmpty(questionimage.imagePath))
+                {
+                    if (questionimage.isUrlImage)
+                    {
+                        // URL画像ロード
+                        await ImageLoader.LoadSpriteFromURL(questionimage.imagePath, sp => questionimage.quizImage = sp);
+                    }
+                    else
+                    {
+
+                        string resPath = Path.GetFileNameWithoutExtension(questionimage.imagePath);
+                        byte[] imagebynary = await File.ReadAllBytesAsync(resPath);
+                        Texture2D loadTexture = new Texture2D(2, 2);
+                        loadTexture.LoadImage(imagebynary);
+                        questionimage.quizImage = Sprite.Create(loadTexture, new Rect(0, 0, loadTexture.width, loadTexture.height), Vector2.zero);
+                    }
+                }
+                result.Add(questionimage);
+            }
+        }
+        Debug.Log($"Load from Json count = {result.Count}");
+        quizDatas = result.ToArray();
+        quizTitle = wrapper.quizTitle;
         return result;
     }
     public void ExportJson(string jsonname)
