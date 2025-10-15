@@ -20,6 +20,7 @@ public class QuizLoadFromCSV : MonoBehaviour
     public List<QuizData> QuizDataList => defaultDatabase.quizDatas.ToList();
 
 
+    [OnInspectorButton]
     // 外部CSVロード
     private void UpdateCSV() 
     {
@@ -151,6 +152,7 @@ public class QuizLoadFromCSV : MonoBehaviour
         UnityEngine.Debug.Log($"MargeQuizzes is {external.Count}");
     }
     //新たなクイズデータベースを作成
+    [OnInspectorButton]
     private void ExportCSV(/*List<QuizData> external*/)
     {
         QuizData[] external = defaultDatabase.quizDatas;
@@ -204,26 +206,26 @@ public class QuizLoadFromCSV : MonoBehaviour
     }
 }
 
-//エディターを変更宣言.
-[CustomEditor(typeof(QuizLoadFromCSV))]
-public class QuizDataBaseInspector : Editor
-{
-    [SerializeField] QuizDataWrapperSO quizList;
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-        QuizLoadFromCSV _manager = target as QuizLoadFromCSV;
+////エディターを変更宣言.
+//[CustomEditor(typeof(QuizLoadFromCSV))]
+//public class QuizDataBaseInspector : Editor
+//{
+//    [SerializeField] QuizDataWrapperSO quizList;
+//    public override void OnInspectorGUI()
+//    {
+//        base.OnInspectorGUI();
+//        QuizLoadFromCSV _manager = target as QuizLoadFromCSV;
 
-        if (GUILayout.Button("Load From CSV file"))
-        {
+//        if (GUILayout.Button("Load From CSV file"))
+//        {
             
-            _manager.SendMessage("UpdateCSV", null, SendMessageOptions.DontRequireReceiver);
-            UnityEngine.Debug.Log("Call Update CSV from Editor");
-        }
-        if (GUILayout.Button("Export CSV file"))
-        {
-            _manager.SendMessage("ExportCSV", null,SendMessageOptions.DontRequireReceiver);
-            UnityEngine.Debug.Log("Call Export CSV from Editor");
-        }
-    }
-}
+//            _manager.SendMessage("UpdateCSV", null, SendMessageOptions.DontRequireReceiver);
+//            UnityEngine.Debug.Log("Call Update CSV from Editor");
+//        }
+//        if (GUILayout.Button("Export CSV file"))
+//        {
+//            _manager.SendMessage("ExportCSV", null,SendMessageOptions.DontRequireReceiver);
+//            UnityEngine.Debug.Log("Call Export CSV from Editor");
+//        }
+//    }
+//}

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-//Editorでクイズデータを作る時用
+//Editorでクイズデータを作る時用(コルーチンが使えないため、非同期です。)
 //アタッチするためには、1ファイル,1Unity関連クラス(ファイル名と一致)
 //元のやつと構成は同じにすること
 [CreateAssetMenu(menuName = "QuizDataWrapperSO")]
@@ -26,7 +26,7 @@ public class QuizDataWrapperSO : ScriptableObject
         {
             Debug.LogError("Json File is Not Exist");
         }
-        // 共通部分を読み込み
+        // 共通部分を読み込み(QuizDataWrapper2との互換性は消滅)
         QuizDataWrapper wrapper = JsonUtility.FromJson<QuizDataWrapper>(textdata);
 
         Debug.Log($"wrapperLoad:{JsonUtility.ToJson(wrapper,true)}");//OK
@@ -91,7 +91,7 @@ public class QuizDataWrapperSO : ScriptableObject
         quizTitle = wrapper.quizTitle;
         return result;
     }
-    public void ExportJson(string jsonName)
+    public void ExportJson()
     {
         //SOではなく、正しいデータを使用
         QuizDataWrapper wrapper = new QuizDataWrapper();
@@ -126,9 +126,9 @@ public class QuizDataWrapperSO : ScriptableObject
             }
             list.Add(q);
         }
-        wrapper.quizDatas = quizDatas.ToArray();
+        wrapper.quizDatas = list.ToArray();
         string json = JsonUtility.ToJson(wrapper, true);
-        string writePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".json");
+        string writePath = Path.Combine(Application.streamingAssetsPath, wrapper.quizTitle+ ".json");
         File.WriteAllText(writePath, json);
         Debug.Log($"ExportedJson:\n{json}at{writePath}");
 #if UNITY_EDITOR
@@ -146,7 +146,6 @@ public class QuizDadaSOInEditot : Editor
 {
     //クラスのメンバーじゃ無いと更新できない
     string loadJsonFileName = "loadJsonFileName";
-    string exportJsonFileName = "exportJsonFileName";
 
     //private string[] quizTypeOptions = { "Text", "Image" };
     //private SerializedProperty quizTypeStringProp;
@@ -169,17 +168,16 @@ public class QuizDadaSOInEditot : Editor
         //    quizTypeStringProp.stringValue = quizTypeOptions[newIndex];
         //}
         QuizDataWrapperSO wrapper = target as QuizDataWrapperSO;
-        
+
         loadJsonFileName = GUILayout.TextField(loadJsonFileName);
-        if(GUILayout.Button("Load Json"))
+        if (GUILayout.Button("Load Json"))
         {
             wrapper.LoadJson(loadJsonFileName);
         }
         GUILayout.Space(1);
-        exportJsonFileName = GUILayout.TextField(exportJsonFileName);
         if (GUILayout.Button("Export Json"))
         {
-            wrapper.ExportJson(exportJsonFileName);
+            wrapper.ExportJson();
         }
         //変更を許可するみたいなやつ
         serializedObject.ApplyModifiedProperties();

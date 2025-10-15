@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.UI;
 
 
 //ゲームで実際に使われる方
@@ -17,7 +20,7 @@ public class QuizDataWrapper
 
     public List<QuizData> LoadJson(string jsonName)
     {
-        string filePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".json");
+        string filePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".loader");
         string textdata = File.ReadAllText(filePath);
         if (textdata == null)
         {
@@ -52,7 +55,7 @@ public class QuizDataWrapper
     }
     public async Task<List<QuizData>> LoadJsonAsync(string jsonName)
     {
-        string filePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".json");
+        string filePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".loader");
         Debug.Log(filePath);
         string textdata = File.ReadAllText(filePath);
         if (textdata == null)
@@ -151,7 +154,7 @@ public class QuizDataWrapper
             }
             list.Add(q);
         }
-        wrapper.quizDatas = quizDatas.ToArray();
+        wrapper.quizDatas = list.ToArray();
         string json = JsonUtility.ToJson(wrapper, true);
         //memo
         //一時領域のパス
@@ -165,7 +168,7 @@ public class QuizDataWrapper
 
         //実行中に保存されるファイルがあるパス
         //Application.persistentDataPath
-        string writePath = Path.Combine(Application.streamingAssetsPath , jsonName + ".json");
+        string writePath = Path.Combine(Application.streamingAssetsPath , jsonName + ".loader");
         File.WriteAllText(writePath, json);
         Debug.Log($"ExportedJson:\n{json}");
         //ProjectWindowを再読み込み,変更を適応

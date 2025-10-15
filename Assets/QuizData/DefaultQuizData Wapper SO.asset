@@ -26,6 +26,8 @@ MonoBehaviour:
   - rid: 3798930630723502447
   - rid: 3798930630723502448
   - rid: 3798930630723502495
+  - rid: 3798930678022668485
+  - rid: 3798930678022668486
   references:
     version: 2
     RefIds:
@@ -213,3 +215,36 @@ MonoBehaviour:
         imageName: GbgXRmdbkAAdUdu-removebg-preview.png
         isUrlImage: 0
         caption: BB
+    - rid: 3798930678022668485
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 13
+        questionText: "\u3053\u306E\u30B5\u30FC\u30AF\u30EB\u5275\u8A2D\u4F55\u5E74\u76EE\u3067\u3057\u3087\u3046\u304B"
+        choices:
+        - "10\u5E74"
+        - "20\u5E74"
+        - "1\u5E74"
+        - "2\u5E74"
+        correctAnswer: 3
+        explanation: "\u30C7\u30B8\u5275\u306F\u5275\u8A2D2\u5E74\u76EE\u307E\u3060\u307E\u3060\u65B0\u9BAE\u306A\u30B5\u30FC\u30AF\u30EB\u3067\u3059"
+        tag: "\u30B5\u30FC\u30AF\u30EB"
+        quiztype: text
+        questiontext: 
+    - rid: 3798930678022668486
+      type: {class: ImageQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 14
+        questionText: "\u30C7\u30B8\u30BF\u30EB\u5275\u4F5C\u540C\u597D\u4F1A\u306E\u6240\u5C5E\u30E1\u30F3\u30D0\u30FC\u306F"
+        choices:
+        - "10\u4EBA"
+        - "20\u4EBA"
+        - "30\u4EBA"
+        - "40\u4EBA"
+        correctAnswer: 2
+        explanation: "\u78BA\u304B\u3053\u308C\u304F\u3089\u3044\u3060\u3063\u305F\u306F\u305A"
+        tag: "\u30B5\u30FC\u30AF\u30EB"
+        quiztype: image
+        quizImage: {fileID: 21300000, guid: 8f9ec09c53b7faa4490888687ebcb81f, type: 3}
+        imageName: l_mm_E20.jpg
+        isUrlImage: 0
+        caption: AA

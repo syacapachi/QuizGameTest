@@ -6,16 +6,18 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using static QuizManager;
+
 //[ExecuteAlways]
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance {  get; private set; } 
     [Header("問題json")]
     [SerializeField] string jsonName = "quiz_data";
     [Header("セットアップUI")]
     [SerializeField] GameObject setupPanel;
+    [SerializeField] GameObject quizTitleButton;
+    [SerializeField] Transform prefabParent;
     [SerializeField] TextMeshProUGUI errorMessage;
+    private string[] QuizTitiles;
     [Header("出題画面")]
     [SerializeField] TextMeshProUGUI questionText;
     [SerializeField] Image QuizImage;
@@ -37,7 +39,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] int quizID = 0;
     [SerializeField] string quiztag = "";
 
+    private bool isQuizTitileSet = false;
     private List<QuizData> quizData = new List<QuizData>();
+    private QuizData[] quizArray;
     private List<QuizData> sortQuizData = new List<QuizData>();
     private int quizindex = 0;
     private int collectCount;
@@ -54,32 +58,46 @@ public class GameManager : MonoBehaviour
         Tag,
         End,
     }
-    private void Awake()
+    public void SetUp(string json)
     {
-        if (Instance == null)
+        StartCoroutine(ManagerLocater.Instance.loader.LoadJsonCoroutine(json, result =>
         {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+            if (result != null)
+            {
+                Debug.Log($"Loaded {result.quizDatas.Length} quizzes");
+                quizData = result.quizDatas.ToList();
+                quizArray = result.quizDatas;
+                //終わってから呼ばれる安心安全設計
+                gameModeType = GameModeType.Random;
+                StartQuiz();
+            }
+
+            else
+                Debug.LogError("Failed to load quiz data");
+        }));
+        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Task.Run(() => QuizLoadFromJson(jsonName));
+        //StartCoroutine(ManagerLocater.Instance.loader.LoadJsonCoroutine(jsonName, result =>
+        //{
+        //    if (result != null)
+        //    {
+        //        Debug.Log($"Loaded {result.quizDatas.Length} quizzes");
+        //        quizData = result.quizDatas.ToList();
+        //        quizArray = result.quizDatas;
+        //    }
+               
+        //    else
+        //        Debug.LogError("Failed to load quiz data");
+        //}));
+        QuizTitiles = GetQuizTitile();
         SetUpUI();
         ShowSetup();
         
     }
-    public async Task QuizLoadFromJson(string jsonpath)
-    {
-        var result = await wrapper.LoadJsonAsync(jsonpath);
-        quizData = result;
-    }
-
+    [OnInspectorButton]
     public void StartQuiz()
     {
         switch (gameModeType)
@@ -101,7 +119,16 @@ public class GameManager : MonoBehaviour
         }
     }
     
-
+    private string[] GetQuizTitile()
+    {
+        string streamingPath = Application.streamingAssetsPath;
+        string usersPath = Application.persistentDataPath;
+        string[] defaultData = ManagerLocater.Instance.loader.LoadJsonFileName(streamingPath);
+        string[] userData = ManagerLocater.Instance.loader.LoadJsonFileName(usersPath);
+        string[] result = defaultData.Concat(userData).ToArray();
+        Debug.Log(string.Join(",", result));
+        return result;
+    }
     private string ToAlphabet(int index)
     {
         return ((char)('A' + index)).ToString();
@@ -132,6 +159,25 @@ public class GameManager : MonoBehaviour
         errorMessage.text = "";
         nextText.text = "Next";
         setupPanel.SetActive(true);
+        if (!isQuizTitileSet)
+        {
+            CreateQuizTitleButton();
+            isQuizTitileSet = false;
+        }
+    }
+    private void CreateQuizTitleButton()
+    {
+        for (int i = 0; i < QuizTitiles.Length; i++) 
+        {
+            int index = i;
+            GameObject clone = Instantiate(quizTitleButton,prefabParent);
+            Button button = clone.GetComponent<Button>();
+            if (button == null) button = clone.AddComponent<Button>();
+            button.onClick.AddListener(() => SetUp(QuizTitiles[index]));
+            TextMeshProUGUI text = clone.GetComponentInChildren<TextMeshProUGUI>();
+            if (text == null) text = clone.AddComponent<TextMeshProUGUI>();
+            text.text = QuizTitiles[i];
+        }
     }
     private void ShowRandomQuiz()
     {
@@ -271,31 +317,31 @@ public class GameManager : MonoBehaviour
 }
 
 
-//Inspectorに実行ボタンを追加するクラス
-//拡張するクラス
-[CustomEditor(typeof(GameManager))]
-public class InspecterStartButton : Editor//Editorを継承
-{
-    //このクラスがインスペクターに表示される場合のオーバーライド
-    public override void OnInspectorGUI()
-    {
-        //元のインスペクターを表示
-        //Base ->基底クラス(Editor)のメンバーのアクセサ
-        base.OnInspectorGUI();
+////Inspectorに実行ボタンを追加するクラス
+////拡張するクラス
+//[CustomEditor(typeof(GameManager))]
+//public class InspecterStartButton : Editor//Editorを継承
+//{
+//    //このクラスがインスペクターに表示される場合のオーバーライド
+//    public override void OnInspectorGUI()
+//    {
+//        //元のインスペクターを表示
+//        //Base ->基底クラス(Editor)のメンバーのアクセサ
+//        base.OnInspectorGUI();
 
-        //Editorの変数target(インスペクターに表示される対象を上書き)
-        //targetを拡張するクラスに変換する
-        GameManager _quizUIManager = this.target as GameManager;//(QuizUIManager)this.target;と同義(キャストできない場合にnullが出る)
+//        //Editorの変数target(インスペクターに表示される対象を上書き)
+//        //targetを拡張するクラスに変換する
+//        GameManager _quizUIManager = this.target as GameManager;//(QuizUIManager)this.target;と同義(キャストできない場合にnullが出る)
         
-        if (GUILayout.Button("Start Quiz"))
-        {
-            //public関数の場合
-            _quizUIManager.StartQuiz();
-            //private関数の場合
-            //関数にメッセージを送信->発火
-            //SendMessage("関数名",引数,返り値があるか)
-            //元のクラスで[ExecuteAlway]宣言が必要(Editor上で動くメソッドという意味)
-            //_quizUIManager.SendMessage("StartQuiz",null,SendMessageOptions.DontRequireReceiver);
-        }
-    }
-}
+//        if (GUILayout.Button("Start Quiz"))
+//        {
+//            //public関数の場合
+//            _quizUIManager.StartQuiz();
+//            //private関数の場合
+//            //関数にメッセージを送信->発火
+//            //SendMessage("関数名",引数,返り値があるか)
+//            //元のクラスで[ExecuteAlway]宣言が必要(Editor上で動くメソッドという意味)
+//            //_quizUIManager.SendMessage("StartQuiz",null,SendMessageOptions.DontRequireReceiver);
+//        }
+//    }
+//}

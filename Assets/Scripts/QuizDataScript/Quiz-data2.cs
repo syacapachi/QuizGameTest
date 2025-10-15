@@ -47,7 +47,7 @@ public class QuizData2Wrapper
     }
     public async Task<List<QuizData2>> LoadJsonAsync(string jsonName)
     {
-        string filePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".json");
+        string filePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".loader");
         string textdata = File.ReadAllText(filePath);
         if (textdata == null)
         {
@@ -72,17 +72,17 @@ public class QuizData2Wrapper
             else if (q.quiztype == Quiztype.image.ToString())
             {
                 ImageQuizData2 questionimage = JsonUtility.FromJson<ImageQuizData2>(JsonUtility.ToJson(q));
-                if (!string.IsNullOrEmpty(questionimage.imagePath))
+                if (!string.IsNullOrEmpty(questionimage.imageName))
                 {
                     if (questionimage.isUrlImage)
                     {
                         // URL画像ロード
-                        await ImageLoader.LoadSpriteFromURL(questionimage.imagePath, sp => questionimage.quizImage = sp);
+                        await ImageLoader.LoadSpriteFromURL(questionimage.imageName, sp => questionimage.quizImage = sp);
                     }
                     else
                     {
 
-                        string resPath = Path.GetFileNameWithoutExtension(questionimage.imagePath);
+                        string resPath = Path.GetFileNameWithoutExtension(questionimage.imageName);
                         byte[] imagebynary = await File.ReadAllBytesAsync(resPath);
                         Texture2D loadTexture = new Texture2D(2, 2);
                         loadTexture.LoadImage(imagebynary);
@@ -137,7 +137,7 @@ public class QuizData2
 public class ImageQuizData2 : QuizData2
 {
     public Sprite quizImage;
-    public string imagePath;
+    public string imageName;
     [HideInInspector]//WebGLビルド用
     public bool isUrlImage;
     public string caption;

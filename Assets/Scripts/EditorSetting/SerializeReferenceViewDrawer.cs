@@ -4,9 +4,10 @@ using UnityEditor;
 
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 /// <summary>
-/// [SerializeReferenceView] 用 PropertyDrawer
+/// [SerializeReferenceView] 用 PropertyDrawer(UnityEditorの最上位)
 /// </summary>
 [CustomPropertyDrawer(typeof(SerializeReferenceViewAttribute))]
 public class SerializeReferenceViewDrawer : PropertyDrawer
@@ -47,11 +48,84 @@ public class SerializeReferenceViewDrawer : PropertyDrawer
             //属性に含まれるシリアル化された情報を描画
             EditorGUI.PropertyField(body, property, true);
             EditorGUI.indentLevel--;//インデックスを戻す
+
+            // OnInspectorButton対応
+            DrawOnInspectorButtons(property.managedReferenceValue);
         }
 
         EditorGUI.EndProperty();
     }
 
+    //[OnInspectorButton]に対応
+    private void DrawOnInspectorButtons(object instance)
+    {
+        if (instance == null) return;
+
+        var methods = instance.GetType()
+            .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .Where(m => m.GetCustomAttribute<OnInspectorButtonAttribute>() != null);
+
+        foreach (var method in methods)
+        {
+            var buttonAttr = method.GetCustomAttribute<OnInspectorButtonAttribute>();
+            if (buttonAttr.showOnlyInPlayMode && !Application.isPlaying)
+                continue;
+
+            string buttonLabel = buttonAttr.label ?? method.Name;
+            GUILayout.Space(5);
+            EditorGUILayout.LabelField($"▶ {buttonLabel}", EditorStyles.boldLabel);
+
+            var parameters = method.GetParameters();
+            var args = new List<object>();
+
+            // 引数GUI
+            foreach (var param in parameters)
+            {
+                args.Add(DrawParameterField(param));
+            }
+
+            // ボタン生成
+            if (GUILayout.Button($"実行: {buttonLabel}"))
+            {
+                EditorApplication.delayCall += () =>
+                {
+                    try
+                    {
+                        method.Invoke(instance, args.ToArray());
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogError($"[OnInspectorButton] {method.Name} 実行エラー: {ex}");
+                    }
+                };
+            }
+        }
+    }
+    private object DrawParameterField(ParameterInfo param)
+    {
+        Type type = param.ParameterType;
+        string label = param.Name;
+        object defaultValue = type.IsValueType ? Activator.CreateInstance(type) : null;
+
+        if (type == typeof(int))
+            return EditorGUILayout.IntField(label, 0);
+
+        if (type == typeof(float))
+            return EditorGUILayout.FloatField(label, 0f);
+
+        if (type == typeof(string))
+            return EditorGUILayout.TextField(label, "");
+
+        if (type == typeof(bool))
+            return EditorGUILayout.Toggle(label, false);
+
+        if (type.IsEnum)
+            return EditorGUILayout.EnumPopup(label, (Enum)Enum.GetValues(type).GetValue(0));
+
+        // 不明な型は表示のみ
+        EditorGUILayout.LabelField(label, $"未対応型: {type.Name}");
+        return defaultValue;
+    }
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         //何もないならスペースを1.2fに

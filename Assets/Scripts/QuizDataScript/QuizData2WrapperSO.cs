@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-//Editor‚ÅƒNƒCƒYƒf[ƒ^‚ğì‚é—p
-//ƒAƒ^ƒbƒ`‚·‚é‚½‚ß‚É‚ÍA1ƒtƒ@ƒCƒ‹,1UnityŠÖ˜AƒNƒ‰ƒX(ƒtƒ@ƒCƒ‹–¼‚Æˆê’v)
-//Œ³‚Ì‚â‚Â‚Æ\¬‚Í“¯‚¶‚É‚·‚é‚±‚Æ
+//Editorã§ã‚¯ã‚¤ã‚ºãƒ‡ãƒ¼ã‚¿ã‚’ä½œã‚‹æ™‚ç”¨
+//ã‚¢ã‚¿ãƒƒãƒã™ã‚‹ãŸã‚ã«ã¯ã€1ãƒ•ã‚¡ã‚¤ãƒ«,1Unityé–¢é€£ã‚¯ãƒ©ã‚¹(ãƒ•ã‚¡ã‚¤ãƒ«åã¨ä¸€è‡´)
+//å…ƒã®ã‚„ã¤ã¨æ§‹æˆã¯åŒã˜ã«ã™ã‚‹ã“ã¨
 [CreateAssetMenu(menuName = "QuizData2WrapperSO")]
 public class QuizData2WrapperSO : ScriptableObject
 {
@@ -17,9 +17,9 @@ public class QuizData2WrapperSO : ScriptableObject
     //public List<QuizDataSO> quizDatasSO = new List<QuizDataSO>(); 
     [SerializeReference]
     public QuizData2[] quizDatas ;
-    
-    //ŠO•”‚ÅŒÄ‚Ô•K—v‚ ‚è
-    //Web‚©‚ç“Ç‚Şê‡‚ÍA‘Ò‹@‚ª”­¶‚·‚é‚½‚ßƒRƒ‹[ƒ`ƒ“‚ğg—p
+
+    //å¤–éƒ¨ã§å‘¼ã¶å¿…è¦ã‚ã‚Š
+    //Webã‹ã‚‰èª­ã‚€å ´åˆã¯ã€å¾…æ©ŸãŒç™ºç”Ÿã™ã‚‹ãŸã‚ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’ä½¿ç”¨
     private IEnumerator LoadJsonFromWeb(string jsonName)
     {
         string filePath = Path.Combine(Application.streamingAssetsPath, jsonName + ".json");
@@ -42,16 +42,16 @@ public class QuizData2WrapperSO : ScriptableObject
         {
             Debug.LogError("Json File is Not Exist");
         }
-        // ‹¤’Ê•”•ª‚ğ“Ç‚İ‚İ
+        // å…±é€šéƒ¨åˆ†ã‚’èª­ã¿è¾¼ã¿
         QuizData2Wrapper wrapper = JsonUtility.FromJson<QuizData2Wrapper>(textdata);
-        //ƒ^ƒCƒgƒ‹‚ğ“Ç‚Ş
+        //ã‚¿ã‚¤ãƒˆãƒ«ã‚’èª­ã‚€
         quizTitle = wrapper.quizTitle;
-        //’†g‚ğ“Ç‚Ş
+        //ä¸­èº«ã‚’èª­ã‚€
         List<QuizData2> list = new();
 
         foreach (var q in wrapper.quizDatas)
         {
-            string raw = JsonUtility.ToJson(q);//ˆê’U‚à‚Ç‚·
+            string raw = JsonUtility.ToJson(q);//ä¸€æ—¦ã‚‚ã©ã™
             QuizData2 newQ = null;
 
             switch (q.quiztype)
@@ -61,17 +61,17 @@ public class QuizData2WrapperSO : ScriptableObject
                     break;
                 case "image":
                     var imgQ = JsonUtility.FromJson<ImageQuizData2>(raw);
-                    if (!string.IsNullOrEmpty(imgQ.imagePath))
+                    if (!string.IsNullOrEmpty(imgQ.imageName))
                     {
                         if (imgQ.isUrlImage)
                         {
-                            // URL‰æ‘œƒ[ƒh
-                            yield return ImageLoader.LoadSpriteFromURL(imgQ.imagePath, sp => imgQ.quizImage = sp);
+                            // URLç”»åƒãƒ­ãƒ¼ãƒ‰
+                            yield return ImageLoader.LoadSpriteFromURL(imgQ.imageName, sp => imgQ.quizImage = sp);
                         }
                         else
                         {
-                            // ƒ[ƒJƒ‹iResourcesj‚©‚çƒ[ƒh
-                            string resPath = Path.GetFileNameWithoutExtension(imgQ.imagePath);
+                            // ãƒ­ãƒ¼ã‚«ãƒ«ï¼ˆResourcesï¼‰ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰
+                            string resPath = Path.GetFileNameWithoutExtension(imgQ.imageName);
                             imgQ.quizImage = Resources.Load<Sprite>(resPath);
                         }
                     }
@@ -82,7 +82,7 @@ public class QuizData2WrapperSO : ScriptableObject
         }
 
         quizDatas = list.ToArray();
-        Debug.Log("JSON“Ç‚İ‚İŠ®—¹");
+        Debug.Log("JSONèª­ã¿è¾¼ã¿å®Œäº†");
     }
     public async Task<List<QuizData2>> LoadJsonAsync(string jsonName)
     {
@@ -92,7 +92,7 @@ public class QuizData2WrapperSO : ScriptableObject
         {
             Debug.LogError("Json File is Not Exist");
         }
-        // ‹¤’Ê•”•ª‚ğ“Ç‚İ‚İ
+        // å…±é€šéƒ¨åˆ†ã‚’èª­ã¿è¾¼ã¿
         QuizData2Wrapper wrapper = JsonUtility.FromJson<QuizData2Wrapper>(textdata);
 
         //Debug.Log($"wrapperLoad:{JsonUtility.ToJson(wrapper, true)}");//OK
@@ -102,7 +102,7 @@ public class QuizData2WrapperSO : ScriptableObject
         {
             //Debug.Log($"q:{q}");
             Debug.Log($"q.quiztype:{q.quiztype}");//Null
-            //ƒNƒ‰ƒX•Ê‚Ì”h¶•”•ª‚ğ‘I‘ğ(—v‘f‚ğ‚¢‚Á‚½‚ñText‚É’¼‚µ‚Ä‚©‚çƒŠƒ[ƒh)
+            //ã‚¯ãƒ©ã‚¹åˆ¥ã®æ´¾ç”Ÿéƒ¨åˆ†ã‚’é¸æŠ(è¦ç´ ã‚’ã„ã£ãŸã‚“Textã«ç›´ã—ã¦ã‹ã‚‰ãƒªãƒ­ãƒ¼ãƒ‰)
             if (q.quiztype == Quiztype.text.ToString())
             {
                 TextQuizData2 questiontext = JsonUtility.FromJson<TextQuizData2>(JsonUtility.ToJson(q));
@@ -111,22 +111,31 @@ public class QuizData2WrapperSO : ScriptableObject
             else if (q.quiztype == Quiztype.image.ToString())
             {
                 ImageQuizData2 questionimage = JsonUtility.FromJson<ImageQuizData2>(JsonUtility.ToJson(q));
-                if (!string.IsNullOrEmpty(questionimage.imagePath))
+                if (!string.IsNullOrEmpty(questionimage.imageName))
                 {
-                    if (questionimage.isUrlImage)
-                    {
-                        // URL‰æ‘œƒ[ƒh
-                        await ImageLoader.LoadSpriteFromURL(questionimage.imagePath, sp => questionimage.quizImage = sp);
-                    }
-                    else
-                    {
+                    //if (questionimage.isUrlImage)
+                    //{
+                    //    // URLç”»åƒãƒ­ãƒ¼ãƒ‰
+                    //    await ImageLoader.LoadSpriteFromURL(questionimage.imageName, sp => questionimage.quizImage = sp);
+                    //}
+                    //else
+                    //{
 
-                        string resPath = Path.GetFileNameWithoutExtension(questionimage.imagePath);
-                        byte[] imagebynary = await File.ReadAllBytesAsync(resPath);
-                        Texture2D loadTexture = new Texture2D(2, 2);
-                        loadTexture.LoadImage(imagebynary);
-                        questionimage.quizImage = Sprite.Create(loadTexture,new Rect(0,0,loadTexture.width,loadTexture.height),Vector2.zero);
-                    }
+                        string folderPath = Path.Combine("ImageData", questionimage.imageName);
+                        string fullPath = Path.Combine(Application.streamingAssetsPath, folderPath);
+                        Debug.Log(fullPath);
+                        // ãƒ•ã‚¡ã‚¤ãƒ«å­˜åœ¨ãƒã‚§ãƒƒã‚¯
+                        if (!File.Exists(fullPath))
+                        {
+                            Debug.LogError($"âŒ File not found: {fullPath}");
+                        }
+                        byte[] imageBinary = File.ReadAllBytes(fullPath);//Editorã§ã¯åŒæœŸå‡¦ç†
+                        Debug.Log($"âœ… Image Loaded ({imageBinary.Length} bytes)");
+                        questionimage.quizImage = ImageLoader.SpriteFromByteArray(imageBinary);
+                        //Texture2D loadTexture = new Texture2D(2, 2);
+                        //loadTexture.LoadImage(imageBinary);
+                        //questionimage.quizImage = Sprite.Create(loadTexture,new Rect(0,0,loadTexture.width,loadTexture.height),Vector2.zero);
+                    //}
                 }
                 result.Add(questionimage);
             }
@@ -136,9 +145,9 @@ public class QuizData2WrapperSO : ScriptableObject
         quizTitle = wrapper.quizTitle;
         return result;
     }
-    public void ExportJson(string jsonName)
+    public void ExportJson()
     {
-        //SO‚Å‚Í‚È‚­A³‚µ‚¢ƒf[ƒ^‚ğg—p;
+        //SOã§ã¯ãªãã€æ­£ã—ã„ãƒ‡ãƒ¼ã‚¿ã‚’ä½¿ç”¨;
         QuizData2Wrapper wrapper = new QuizData2Wrapper();
         wrapper.quizTitle = quizTitle;
 
@@ -147,21 +156,35 @@ public class QuizData2WrapperSO : ScriptableObject
         {
             if (q is ImageQuizData2 imgQ && imgQ.quizImage != null)
             {
-                // Sprite‚ªİ’è‚³‚ê‚Ä‚¢‚éê‡A‚»‚ÌƒpƒX‚ğimagePath‚É‘‚«‚Ş
-                string path = AssetDatabase.GetAssetPath(imgQ.quizImage);
-                if (!string.IsNullOrEmpty(path))
+                // SpriteãŒè¨­å®šã•ã‚Œã¦ã„ã‚‹å ´åˆã€StreamingAssetsã«ç§»å‹•ã—ãƒ‘ã‚¹ã‚’imagePathã«æ›¸ãè¾¼ã‚€
+                // Assetä»¥ä¸‹ã®ãƒ‘ã‚¹
+                string AssetPath = AssetDatabase.GetAssetPath(imgQ.quizImage);
+                string fileName = Path.GetFileName(AssetPath);
+                //çµ¶å¯¾ãƒ‘ã‚¹E://
+                string exportDir = Path.Combine(Application.streamingAssetsPath, "ImageData");
+                if (!Directory.Exists(exportDir))
+                    Directory.CreateDirectory(exportDir);
+
+                string exportPath = Path.Combine(exportDir, fileName);
+                Debug.Log(AssetPath + "\n" + exportPath);
+                if (!File.Exists(exportPath))
                 {
-                    imgQ.imagePath = path;
-                    imgQ.isUrlImage = path.StartsWith("http");
+                    File.Copy(AssetPath, exportPath);
+                    Debug.Log($"âœ… Copied image to StreamingAssets: {exportPath}");
+                }
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    imgQ.imageName = fileName;
+                    imgQ.isUrlImage = fileName.StartsWith("http");
                 }
             }
             list.Add(q);
         }
         wrapper.quizDatas = quizDatas.ToArray();
         string json = JsonUtility.ToJson(wrapper, true);
-        File.WriteAllText(Application.streamingAssetsPath + "/" + jsonName + ".json", json);
+        File.WriteAllText(Application.streamingAssetsPath + "/" + wrapper.quizTitle + ".json", json);
         Debug.Log($"ExportedJson:\n{json}");
-        //ProjectWindow‚ğÄ“Ç‚İ‚İ,•ÏX‚ğ“K‰
+        //ProjectWindowã‚’å†èª­ã¿è¾¼ã¿,å¤‰æ›´ã‚’é©å¿œ
         AssetDatabase.Refresh();
     }
 
@@ -172,9 +195,9 @@ public class QuizData2WrapperSO : ScriptableObject
 [CustomEditor(typeof(QuizData2WrapperSO))]
 public class QuizDada2SOInEditot : Editor
 {
-    //ƒNƒ‰ƒX‚Ìƒƒ“ƒo[‚¶‚á–³‚¢‚ÆXV‚Å‚«‚È‚¢
+    //ã‚¯ãƒ©ã‚¹ã®ãƒ¡ãƒ³ãƒãƒ¼ã˜ã‚ƒç„¡ã„ã¨æ›´æ–°ã§ããªã„
     string loadJsonFileName = "loadJsonFileName";
-    string exportJsonFileName = "exportJsonFileName";
+
 
     //private string[] quizTypeOptions = { "Text", "Image" };
     //private SerializedProperty quizTypeStringProp;
@@ -187,7 +210,7 @@ public class QuizDada2SOInEditot : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        //•ÏX‚ğã‘‚«‚·‚é‚â‚Â
+        //å¤‰æ›´ã‚’ä¸Šæ›¸ãã™ã‚‹ã‚„ã¤
         serializedObject.Update();
         //int index = Mathf.Max(0, System.Array.IndexOf(quizTypeOptions, quizTypeStringProp.stringValue));
         //int newIndex = EditorGUILayout.Popup("Quiz Type", index, quizTypeOptions);
@@ -204,12 +227,11 @@ public class QuizDada2SOInEditot : Editor
             wrapper.LoadJsonAsync(loadJsonFileName);
         }
         GUILayout.Space(1);
-        exportJsonFileName = GUILayout.TextField(exportJsonFileName);
         if (GUILayout.Button("Export Json"))
         {
-            wrapper.ExportJson(exportJsonFileName);
+            wrapper.ExportJson();
         }
-        //•ÏX‚ğ‹–‰Â‚·‚é‚İ‚½‚¢‚È‚â‚Â
+        //å¤‰æ›´ã‚’è¨±å¯ã™ã‚‹ã¿ãŸã„ãªã‚„ã¤
         serializedObject.ApplyModifiedProperties();
     }
 }
