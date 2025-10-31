@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -92,7 +92,7 @@ public class QuizManager : MonoBehaviour
                 string[] values = SplitCSVLine(lines[i]);
                 if (values.Length >= 9)
                 {
-                    QuizData quiz = new QuizData()
+                    QuizData quiz = new TextQuizData()
                     {
                         questionNumber = Int32.Parse(values[0]),
                         questionText = values[1],

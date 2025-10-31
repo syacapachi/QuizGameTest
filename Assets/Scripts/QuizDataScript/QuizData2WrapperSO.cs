@@ -10,7 +10,7 @@ using UnityEngine;
 //Editorでクイズデータを作る時用
 //アタッチするためには、1ファイル,1Unity関連クラス(ファイル名と一致)
 //元のやつと構成は同じにすること
-[CreateAssetMenu(menuName = "QuizData2WrapperSO")]
+//[CreateAssetMenu(menuName = "QuizData2WrapperSO")]
 public class QuizData2WrapperSO : ScriptableObject
 {
     public string quizTitle = "";

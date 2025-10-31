@@ -13,6 +13,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "QuizDataWrapperSO")]
 public class QuizDataWrapperSO : ScriptableObject
 {
+    public QuizType quizType;
     public string quizTitle = "";
     //public List<QuizDataSO> quizDatasSO = new List<QuizDataSO>(); 
     [SerializeReference,SerializeReferenceView(typeof(QuizData))]
@@ -91,12 +92,13 @@ public class QuizDataWrapperSO : ScriptableObject
         quizTitle = wrapper.quizTitle;
         return result;
     }
+
     public void ExportJson()
     {
         //SOではなく、正しいデータを使用
         QuizDataWrapper wrapper = new QuizDataWrapper();
         wrapper.quizTitle = quizTitle;
-        
+        wrapper.quizType = quizType;
         var list = new List<QuizData>();
         foreach (var q in quizDatas)
         {
@@ -170,12 +172,12 @@ public class QuizDadaSOInEditot : Editor
         QuizDataWrapperSO wrapper = target as QuizDataWrapperSO;
 
         loadJsonFileName = GUILayout.TextField(loadJsonFileName);
-        if (GUILayout.Button("Load Json"))
+        if (GUILayout.Button("Jsonを読み込む"))
         {
             wrapper.LoadJson(loadJsonFileName);
         }
         GUILayout.Space(1);
-        if (GUILayout.Button("Export Json"))
+        if (GUILayout.Button("Jsonに書き出す"))
         {
             wrapper.ExportJson();
         }

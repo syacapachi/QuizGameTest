@@ -1,76 +1,143 @@
+ï»¿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+using System;
 
 [CustomPropertyDrawer(typeof(EnableIfEnumAttribute))]
 public class EnableIfEnumDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
+        // ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ä»¥å¤–ã§å‘¼ã°ã‚ŒãŸå ´åˆã€å¾Œã§å†æç”»ã‚’äºˆç´„ã—ã¦ä¸­æ–­
+        if (!IsMainThreadSafe())
+        {
+            EditorApplication.delayCall += () => SafeRepaint(property);
+            return;
+        }
+
         EnableIfEnumAttribute condition = (EnableIfEnumAttribute)attribute;
 
-        //Œ»İ‚ÌƒvƒƒpƒeƒB–¼
+        // Enumã‚’å‚ç…§ã™ã‚‹ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã‚’æ¤œç´¢
         string conditionPath = property.propertyPath.Replace(property.name, condition.enumFiledName);
         SerializedProperty enumProp = property.serializedObject.FindProperty(conditionPath);
 
-        //‚È‚¢ê‡ƒfƒtƒHƒ‹ƒg•\¦
+        // æ¡ä»¶ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãŒå­˜åœ¨ã—ãªã„å ´åˆã¯é€šå¸¸æç”»
         if (enumProp == null)
         {
-            //•\¦ŠÖ”,bool‚ÍAq‹Ÿ‚à•\¦‚·‚é‚©‚Ç‚¤‚©
-            EditorGUI.PropertyField(position, property, label, true);
+            SafeDrawProperty(position, property, label);
             return;
         }
 
         bool enabled = false;
         if (enumProp.propertyType == SerializedPropertyType.Enum)
         {
-            int currentValue = enumProp.enumValueIndex;//enum‚ÌŒ»İ’n‚ğæ“¾
-            foreach(int valid in condition.enumValues){
-                if (currentValue == valid)
-                {
-                    enabled = true;//Œ»İ’n‚Æw’è’n‚ª“¯‚¶‚Ì‚İA^‚ÉXV
-                    break;
-                }
-            }
-        }
-        //‰B‚·İ’è
-        if (!enabled && condition.hideWhenFalse)
-        {
-            //‰½‚à•\¦‚µ‚È‚¢
-            return;
-        }
-
-        //ğŒ‚É‡‚í‚È‚¢ê‡‚ÍƒOƒŒ[
-        bool prev = GUI.enabled;
-        GUI.enabled = enabled;
-        EditorGUI.PropertyField (position, property, label, true);
-        GUI.enabled = prev;
-    }
-    //–³Œø‚É‚·‚éê‡AƒeƒLƒXƒgƒtƒB[ƒ‹ƒh‚Ì‚‚³‚ğ0,‚Â‚Ü‚è”ñ•\¦‚É‚·‚éB
-    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-    {
-        EnableIfEnumAttribute condition = (EnableIfEnumAttribute)attribute;
-        string conditionPath = property.propertyPath.Replace(property.name, condition.enumFiledName);
-        SerializedProperty enumProp = property.serializedObject.FindProperty(conditionPath);
-
-        //”ñ•\¦‚È‚çA‚‚³0‚É‚·‚é
-        if (enumProp != null && enumProp.propertyType == SerializedPropertyType.Enum)
-        {
-            bool enabled = false;
-            int currentValue = enumProp.enumValueIndex;//enum‚ÌŒ»İ’n‚ğæ“¾
+            int currentValue = enumProp.enumValueIndex;
             foreach (int valid in condition.enumValues)
             {
                 if (currentValue == valid)
                 {
-                    enabled = true;//Œ»İ’n‚Æw’è’n‚ª“¯‚¶‚Ì‚İA^‚ÉXV
+                    enabled = true;
                     break;
                 }
             }
-            if (!enabled && condition.hideWhenFalse)
+        }
+
+        // hideWhenFalse ãŒ true ã®å ´åˆã€éè¡¨ç¤ºã«ã™ã‚‹
+        if (!enabled && condition.hideWhenFalse)
+            return;
+
+        // æ¡ä»¶ã‚’æº€ãŸã•ãªã„å ´åˆã¯ã‚°ãƒ¬ãƒ¼è¡¨ç¤º
+        bool prevGUI = GUI.enabled;
+        GUI.enabled = enabled;
+
+        SafeDrawProperty(position, property, label);
+
+        GUI.enabled = prevGUI;
+    }
+
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        // éãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰æ™‚ã¯æç”»ã‚¹ã‚­ãƒƒãƒ—
+        if (!IsMainThreadSafe())
+            return 0f;
+
+        EnableIfEnumAttribute condition = (EnableIfEnumAttribute)attribute;
+        string conditionPath = property.propertyPath.Replace(property.name, condition.enumFiledName);
+        SerializedProperty enumProp = property.serializedObject.FindProperty(conditionPath);
+
+        if (enumProp != null && enumProp.propertyType == SerializedPropertyType.Enum)
+        {
+            bool enabled = false;
+            int currentValue = enumProp.enumValueIndex;
+            foreach (int valid in condition.enumValues)
             {
-                return 0f;
+                if (currentValue == valid)
+                {
+                    enabled = true;
+                    break;
+                }
             }
 
+            if (!enabled && condition.hideWhenFalse)
+                return 0f;
         }
+
         return EditorGUI.GetPropertyHeight(property, label, true);
     }
+
+    // ---------- å…±é€šãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ ----------
+
+    /// <summary>
+    /// å®‰å…¨ã« PropertyField ã‚’æç”»ï¼ˆãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰é™å®šï¼‰
+    /// </summary>
+    private void SafeDrawProperty(Rect position, SerializedProperty property, GUIContent label)
+    {
+        try
+        {
+            EditorGUI.PropertyField(position, property, label, true);
+        }
+        catch (UnityException e)
+        {
+            Debug.LogWarning($"[EnableIfEnumDrawer] skipped drawing due to UnityException: {e.Message}");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[EnableIfEnumDrawer] unexpected error: {ex}");
+        }
+    }
+
+    /// <summary>
+    /// ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ã§å®‰å…¨ã«å‘¼ã³å‡ºã›ã‚‹ã‹åˆ¤å®š
+    /// </summary>
+    private bool IsMainThreadSafe()
+    {
+        try
+        {
+            // ä¸€éƒ¨ã®APIã¯ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ä»¥å¤–ã§å‘¼ã¶ã¨UnityExceptionã‚’æŠ•ã’ã‚‹
+            var _ = UnityEngine.Screen.width;
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// å¾Œã§å®‰å…¨ã«å†æç”»ã‚’è¦æ±‚
+    /// </summary>
+    private void SafeRepaint(SerializedProperty property)
+    {
+        try
+        {
+            if (property == null || property.serializedObject == null)
+                return;
+
+            var editors = UnityEditor.Editor.CreateEditor(property.serializedObject.targetObject);
+            if (editors != null)
+                editors.Repaint();
+        }
+        catch { /* ignore safely */ }
+    }
 }
+#endif

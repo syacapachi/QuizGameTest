@@ -12,8 +12,176 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0a0c29c81ff7c04f991b7ff5e8fe9ba, type: 3}
   m_Name: a
   m_EditorClassIdentifier: Assembly-CSharp::QuizDataWrapperSO
-  quizTitle: 
-  quizDatas: []
+  quizType: 0
+  quizTitle: "\u30C6\u30B9\u30C8\u30AF\u30A4\u30BA"
+  quizDatas:
+  - rid: 3798930948002676837
+  - rid: 3798930948002676838
+  - rid: 3798930948002676839
+  - rid: 3798930948002676840
+  - rid: 3798930948002676841
+  - rid: 3798930948002676842
+  - rid: 3798930948002676843
+  - rid: 3798930948002676844
+  - rid: 3798930948002676845
+  - rid: 3798930948002676846
+  - rid: 3798930948002676847
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 3798930948002676837
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 1
+        questionText: "\u65E5\u672C\u306E\u9996\u90FD\u306F\u3069\u3053\u3067\u3059\u304B\uFF1F"
+        choices:
+        - "\u6771\u4EAC"
+        - "\u5927\u962A"
+        - "\u4EAC\u90FD"
+        - "\u540D\u53E4\u5C4B"
+        correctAnswer: 0
+        explanation: "\u6771\u4EAC\u306F1868\u5E74\u306B\u6C5F\u6238\u304B\u3089\u6539\u79F0\u3055\u308C\u3001\u65E5\u672C\u306E\u9996\u90FD\u3068\u306A\u308A\u307E\u3057\u305F\u3002"
+        tag: "\u5730\u7406\r"
+        quiztype: text
+    - rid: 3798930948002676838
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 2
+        questionText: "\u9152\u7C73\u306E\u738B\u69D8\u300C\u5C71\u7530\u9326\u300D\u306B\u3088\u304F\u898B\u3089\u308C\u308B\u3001\u9AD8\u7CBE\u7C73\u306B\u8010\u3048\u3084\u3059\u3044\u7279\u5FB4\u3092\u6301\u3064\u5FC3\u767D\u5F62\u72B6\u306F\u6B21\u306E\u3046\u3061\u3001\u3069\u308C\u304B\uFF1F"
+        choices:
+        - "\u773C\u72B6\u5FC3\u767D"
+        - "\u7DDA\u72B6\u5FC3\u767D"
+        - "\u70B9\u72B6\u5FC3\u767D"
+        - "\u7121\u5FC3\u767D"
+        correctAnswer: 1
+        explanation: "\u3053\u306E\u7DDA\u72B6\u306E\u5FC3\u767D\u306F\u3001\u7C73\u306E\u5185\u90E8\u3067\u4E2D\u592E\u90E8\u5206\u306B\u504F\u3063\u3066\u73FE\u308C\u307E\u3059\u3002\u3053\u306E\u5F62\u72B6\u306B\u3088\u308A\u3001\u7CBE\u7C73\u3059\u308B\u969B\u306B\u7C73\u7C92\u304C\u7815\u3051\u306B\u304F\u3044\u305F\u3081\u3001\u5927\u541F\u91B8\u306A\u3069\u3067\u6C42\u3081\u3089\u308C\u308B\u9AD8\u5EA6\u306A\u7CBE\u7C73\u306B\u9069\u3057\u3066\u3044\u308B\u3068\u3055\u308C\u3066\u3044\u307E\u3059\u3002"
+        tag: "2\r"
+        quiztype: text
+    - rid: 3798930948002676839
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 3
+        questionText: "\u592A\u967D\u7CFB\u3067\u4E00\u756A\u5927\u304D\u3044\u60D1\u661F\u306F\uFF1F"
+        choices:
+        - "\u5730\u7403"
+        - "\u706B\u661F"
+        - "\u6728\u661F"
+        - "\u571F\u661F"
+        correctAnswer: 2
+        explanation: "\u6728\u661F\u306F\u592A\u967D\u7CFB\u6700\u5927\u306E\u60D1\u661F\u3067\u3001\u5730\u7403\u306E\u7D0411\u500D\u306E\u76F4\u5F84\u304C\u3042\u308A\u307E\u3059\u3002"
+        tag: "\u79D1\u5B66\r"
+        quiztype: text
+    - rid: 3798930948002676840
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 4
+        questionText: "\u300C\u3053\u3093\u306B\u3061\u306F\u300D\u3092\u82F1\u8A9E\u3067\u8A00\u3046\u3068\uFF1F"
+        choices:
+        - Good morning
+        - Hello
+        - Good evening
+        - Good night
+        correctAnswer: 1
+        explanation: "Hello\u306F\u6700\u3082\u4E00\u822C\u7684\u306A\u6328\u62F6\u306E\u8868\u73FE\u3067\u3059\u3002"
+        tag: "\u82F1\u8A9E\r"
+        quiztype: text
+    - rid: 3798930948002676841
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 5
+        questionText: "\u5BCC\u58EB\u5C71\u306E\u9AD8\u3055\u306F\u7D04\u4F55\u30E1\u30FC\u30C8\u30EB\uFF1F"
+        choices:
+        - 2776m
+        - 3276m
+        - 3776m
+        - 4276m
+        correctAnswer: 2
+        explanation: "\u5BCC\u58EB\u5C71\u306E\u6A19\u9AD8\u306F3776\u30E1\u30FC\u30C8\u30EB\u3067\u3059\u3002\u65E5\u672C\u6700\u9AD8\u5CF0\u306E\u5C71\u3067\u3059\u3002"
+        tag: "\u5730\u7406\r"
+        quiztype: text
+    - rid: 3798930948002676842
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 6
+        questionText: "2\xD73\u306F\uFF1F"
+        choices:
+        - 5
+        - 6
+        - 7
+        - 8
+        correctAnswer: 1
+        explanation: "\u639B\u3051\u7B97\u306E\u57FA\u672C\u3067\u3059\u30022\xD73=6\u306B\u306A\u308A\u307E\u3059\u3002"
+        tag: "\u6570\u5B66\r"
+        quiztype: text
+    - rid: 3798930948002676843
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 7
+        questionText: "\u65E5\u672C\u306E\u901A\u8CA8\u5358\u4F4D\u306F\uFF1F"
+        choices:
+        - "\u30C9\u30EB"
+        - "\u30E6\u30FC\u30ED"
+        - "\u30A6\u30A9\u30F3"
+        - "\u5186"
+        correctAnswer: 3
+        explanation: "\u65E5\u672C\u306E\u901A\u8CA8\u5358\u4F4D\u306F\u5186\uFF08\u3048\u3093\uFF09\u3067\u3059\u3002"
+        tag: "\u7D4C\u6E08\r"
+        quiztype: text
+    - rid: 3798930948002676844
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 8
+        questionText: "\u6C34\u306E\u5316\u5B66\u5F0F\u306F\uFF1F"
+        choices:
+        - H2O
+        - CO2
+        - O2
+        - N2
+        correctAnswer: 0
+        explanation: "\u6C34\u306F\u6C34\u7D20\u539F\u5B502\u500B\u3068\u9178\u7D20\u539F\u5B501\u500B\u304B\u3089\u69CB\u6210\u3055\u308C\u3066\u304A\u308A\u3001H2O\u3068\u8868\u8A18\u3055\u308C\u307E\u3059\u3002"
+        tag: "\u79D1\u5B66\r"
+        quiztype: text
+    - rid: 3798930948002676845
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 9
+        questionText: "\u300C\u3042\u308A\u304C\u3068\u3046\u300D\u3092\u82F1\u8A9E\u3067\u8A00\u3046\u3068\uFF1F"
+        choices:
+        - Sorry
+        - Please
+        - Thank you
+        - Excuse me
+        correctAnswer: 2
+        explanation: "Thank you\u306F\u611F\u8B1D\u3092\u8868\u3059\u57FA\u672C\u7684\u306A\u82F1\u8A9E\u8868\u73FE\u3067\u3059\u3002"
+        tag: "\u82F1\u8A9E\r"
+        quiztype: text
+    - rid: 3798930948002676846
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 10
+        questionText: "\u65E5\u672C\u3067\u4E00\u756A\u9577\u3044\u5DDD\u306F\uFF1F"
+        choices:
+        - "\u5229\u6839\u5DDD"
+        - "\u4FE1\u6FC3\u5DDD"
+        - "\u77F3\u72E9\u5DDD"
+        - "\u5929\u7ADC\u5DDD"
+        correctAnswer: 1
+        explanation: "\u4FE1\u6FC3\u5DDD\u306F\u5168\u9577367km\u3067\u3001\u65E5\u672C\u6700\u9577\u306E\u5DDD\u3067\u3059\u3002"
+        tag: "\u5730\u7406"
+        quiztype: text
+    - rid: 3798930948002676847
+      type: {class: TextQuizData, ns: , asm: Assembly-CSharp}
+      data:
+        questionNumber: 11
+        questionText: "\u65E5\u672C\u3067\u4E00\u756A\u9AD8\u3044\u5C71\u306F\uFF1F"
+        choices:
+        - "\u71E7\u30B1\u5CB3"
+        - "\u5317\u5CB3"
+        - "\u99D2\u30F6\u5CB3"
+        - "\u5BCC\u58EB\u5C71"
+        - "\u6D45\u9593\u5C71"
+        - "\u78D0\u68AF\u5C71"
+        correctAnswer: 3
+        explanation: "\u5BCC\u58EB\u5C71\u306E\u6A19\u9AD8\u306F3776m\u3067\u3001\u65E5\u672C\u6700\u9AD8\u5CF0\u306E\u5C71\u3067\u3059\u3002"
+        tag: "\u5730\u7406"
+        quiztype: text

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -12,8 +12,10 @@ using UnityEngine.UI;
 
 
 //ゲームで実際に使われる方
+[System.Serializable]
 public class QuizDataWrapper
 {
+    [SerializeField] public QuizType quizType;
     public string quizTitle = "";
     [SerializeReference]
     public QuizData[] quizDatas;
@@ -175,6 +177,7 @@ public class QuizDataWrapper
         AssetDatabase.Refresh();
     }
 }
+[Serializable]
 public enum Quiztype
 {
     text,
@@ -182,7 +185,7 @@ public enum Quiztype
     other
 }
 [System.Serializable]
-public class QuizData 
+public abstract class QuizData 
 {
     public int questionNumber;      // 問題番号         
     public string questionText;     // 問題文
@@ -203,7 +206,6 @@ public class ImageQuizData : QuizData
     public string imageName;
     [HideInInspector]//WebGLビルド用
     public bool isUrlImage;
-    public string caption;
     public ImageQuizData()
     {
         quiztype = "image";
@@ -216,7 +218,6 @@ public class ImageQuizData : QuizData
 [System.Serializable]
 public class TextQuizData : QuizData
 {
-    public string questiontext;
     public TextQuizData()
     {
         quiztype = "text";

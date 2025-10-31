@@ -1,0 +1,66 @@
+{
+    "quizType": 1,
+    "quizTitle": "MyQuiz",
+    "quizDatas": [
+        {
+            "rid": 1000
+        },
+        {
+            "rid": 1001
+        }
+    ],
+    "references": {
+        "version": 2,
+        "RefIds": [
+            {
+                "rid": 1000,
+                "type": {
+                    "class": "ImageQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 0,
+                    "questionText": "この写真に写る山の名前は?",
+                    "choices": [
+                        "富士山",
+                        "駒ヶ岳",
+                        "磐梯山",
+                        "燧ヶ岳"
+                    ],
+                    "correctAnswer": 2,
+                    "explanation": "とっても綺麗な山なのでぜひ来てね",
+                    "tag": "会津",
+                    "quiztype": "image",
+                    "quizImage": {
+                        "instanceID": 45076
+                    },
+                    "imageName": "磐梯山.jpg",
+                    "isUrlImage": false
+                }
+            },
+            {
+                "rid": 1001,
+                "type": {
+                    "class": "TextQuizData",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "questionNumber": 1,
+                    "questionText": "会津藩で、約17歳の藩士が所属する隊の名前は?",
+                    "choices": [
+                        "玄武隊",
+                        "青龍隊",
+                        "朱雀隊",
+                        "白虎隊"
+                    ],
+                    "correctAnswer": 3,
+                    "explanation": "玄武隊:50歳以上,\\n青龍隊:36~49歳,\\n朱雀隊:18~15歳,\\n白虎隊:16~17歳",
+                    "tag": "会津",
+                    "quiztype": "text"
+                }
+            }
+        ]
+    }
+}

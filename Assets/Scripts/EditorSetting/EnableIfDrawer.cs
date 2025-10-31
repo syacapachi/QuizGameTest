@@ -1,105 +1,194 @@
-using UnityEngine;
+ï»¿#if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine.UIElements;
+using UnityEngine;
+using System.Reflection;
+using System.Linq;
 using System;
+using static UnityEditor.Rendering.FilterWindow;
+using static UnityEngine.Rendering.VolumeComponent;
 
-//EnableAttribute‚ªİ’è‚³‚ê‚½ƒvƒƒpƒeƒB‚ğ•\¦‚·‚é‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
 [CustomPropertyDrawer(typeof(EnableIfAttribute))]
 public class EnableIfDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        EnableIfAttribute enAttr = (EnableIfAttribute)attribute;
-        
-        bool enable = EvaluateConditions(property, enAttr);
-
-        //‰B‚·İ’è
-        if (!enable && enAttr.hideWhenFalse)
+        // ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ã§å®‰å…¨ã«æç”»ã§ãã‚‹ã‹ç¢ºèª
+        if (!IsMainThreadSafe())
         {
-            //‰½‚à‚µ‚È‚¢
-            //”ñ•\¦‚É‚·‚é
+            // ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ã«æˆ»ã—ãŸã¨ãã«å†æç”»ã™ã‚‹ã‚ˆã†ç™»éŒ²ã—ã¦ãŠã
+            EditorApplication.delayCall += () => SafeRepaint(property);
             return;
         }
-        //—LŒø or ƒOƒŒ[ƒAƒEƒg‚µ‚Ä•\¦‚³‚¹‚é
-        bool prev = GUI.enabled;
-        GUI.enabled = enable; //true‚È‚ç•ÒW‰Â”\,false‚È‚ç•ÒW‚Å‚«‚È‚¢
-        //EditorGUI‚ÍAGUI‚Ìİ’è‚ğŒ³‚ÉAƒCƒ“ƒXƒyƒNƒ^[‚ğXV‚·‚éB
-        EditorGUI.PropertyField (position, property, label,true);
-        //‘¼‚ÌGUI‚ª‰e‹¿‚ğó‚¯‚È‚¢‚æ‚¤‚É–ß‚·(‚±‚ÌƒI[ƒo[ƒ‰ƒCƒh‚ÍAEnableIfAttirbute‚ªŒÄ‚Î‚ê‚½‚É‹N‚±‚é)
-        GUI.enabled = prev;
+
+        EnableIfAttribute enableIf = (EnableIfAttribute)attribute;
+        bool enabled = EvaluateConditionsRecursive(property, enableIf);
+
+        bool prevGUIEnabled = GUI.enabled;
+        GUI.enabled = enabled;
+
+        if (!enableIf.hideWhenFalse || enabled)
+        {
+            try
+            {
+                EditorGUI.PropertyField(position, property, label, true);
+            }
+            catch (UnityException e)
+            {
+                // ãƒ•ã‚©ãƒ³ãƒˆç­‰ãŒãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰ä¾å­˜ã§å¤±æ•—ã™ã‚‹ã‚±ãƒ¼ã‚¹ã‚’å®‰å…¨ã«æ¡ã‚Šã¤ã¶ã™
+                Debug.LogWarning($"[EnableIfDrawer] PropertyField skipped due to UnityException: {e.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[EnableIfDrawer] Unexpected error drawing property: {ex}");
+            }
+        }
+
+        GUI.enabled = prevGUIEnabled;
     }
 
-    //–³Œø‚É‚·‚éê‡AƒeƒLƒXƒgƒtƒB[ƒ‹ƒh‚Ì‚‚³‚ğ0,‚Â‚Ü‚è”ñ•\¦‚É‚·‚éB
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        EnableIfAttribute enAttr = (EnableIfAttribute)attribute;
-        bool enable = EvaluateConditions(property, enAttr);
-
-        //”ñ•\¦‚È‚çA‚‚³0‚É‚·‚é
-        if (!enable && enAttr.hideWhenFalse)
-        {
+        if (!IsMainThreadSafe())
             return 0f;
-        }
-            
-        return EditorGUI.GetPropertyHeight(property, label,true);
+
+        EnableIfAttribute enableIf = (EnableIfAttribute)attribute;
+        bool enabled = EvaluateConditionsRecursive(property, enableIf);
+        if (enableIf.hideWhenFalse && !enabled)
+            return 0f;
+
+        return EditorGUI.GetPropertyHeight(property, label, true);
     }
-    private bool EvaluateConditions(SerializedProperty property, EnableIfAttribute enAttr)
+
+    // --- ä»¥ä¸‹ã¯æ—¢å­˜ã®ãƒã‚¹ãƒˆå¯¾å¿œãƒ­ã‚¸ãƒƒã‚¯ï¼ˆãã®ã¾ã¾ï¼‰ ---
+    private bool EvaluateConditionsRecursive(SerializedProperty property, EnableIfAttribute attribute)
     {
-        if (enAttr.conditionFieldNames == null || enAttr.conditionFieldNames.Length == 0)
+        object targetObject = GetParentTarget(property) ?? property.serializedObject.targetObject;
+        if (targetObject == null)
             return true;
 
-        bool[] results = new bool[enAttr.conditionFieldNames.Length];
-
-        for (int i = 0; i < enAttr.conditionFieldNames.Length; i++)
+        bool[] results = attribute.conditionFieldNames.Select(name =>
         {
-            string rawName = enAttr.conditionFieldNames[i];
-            bool negate = false;
+            bool negate = name.StartsWith("!");
+            string fieldName = negate ? name.Substring(1) : name;
 
-            // ”Û’èƒvƒŒƒtƒBƒbƒNƒX '!' ‚É‘Î‰
-            if (rawName.StartsWith("!"))
+            FieldInfo field = GetFieldRecursiveFromRoot(targetObject, fieldName);
+            if (field == null)
+                return false;
+
+            object value = field.GetValue(GetObjectContainingField(property, targetObject));
+            bool result = value switch
             {
-                negate = true;
-                rawName = rawName.Substring(1); // æ“ª‚Ì!‚ğíœ
-            }
-            //“¯‚¶ŠK‘w(“¯ˆêƒtƒ@ƒCƒ‹)‚É‚ ‚é–¼‘OŒŸõ
-            string conditionPath = property.propertyPath.Replace(property.name, rawName);
-            //–¼‘O‚Ì‘O‚É‚ ‚é‘®«(int,float, bool...)‚ğæ“¾
-            SerializedProperty conditionProp = property.serializedObject.FindProperty(conditionPath);
+                bool b => b,
+                Enum e => Convert.ToInt32(e) != 0,
+                _ => value != null
+            };
 
-            bool value = false;
-            if (conditionProp != null && conditionProp.propertyType == SerializedPropertyType.Boolean)
-                value = conditionProp.boolValue;
+            return negate ? !result : result;
+        }).ToArray();
 
-            // ”Û’è‰‰Z‚ğ“K—p
-            results[i] = negate ? !value : value;
-        }
-
-        // ---- ˜_—‰‰Z‚Ü‚Æ‚ß ----
-        switch (enAttr.logic)
+        return attribute.logic switch
         {
-            case ConditionLogic.AND:
-                return Array.TrueForAll(results, r => r);
+            ConditionLogic.AND => results.All(r => r),
+            ConditionLogic.OR => results.Any(r => r),
+            ConditionLogic.NOT => !results.FirstOrDefault(),
+            ConditionLogic.NAND => !results.All(r => r),
+            ConditionLogic.NOR => !results.Any(r => r),
+            ConditionLogic.XOR => results.Count(r => r) == 1,
+            _ => true,
+        };
+    }
 
-            case ConditionLogic.OR:
-                return Array.Exists(results, r => r);
+    // å†å¸°çš„ã«å‹æƒ…å ±ã‹ã‚‰ FieldInfo ã‚’æ¢ã™ï¼ˆç¶™æ‰¿ãƒã‚§ãƒ¼ãƒ³å¯¾å¿œï¼‰
+    private FieldInfo GetFieldRecursiveFromRoot(object obj, string fieldName)
+    {
+        if (obj == null) return null;
+        Type type = obj.GetType();
+        while (type != null)
+        {
+            var f = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (f != null) return f;
+            type = type.BaseType;
+        }
+        return null;
+    }
 
-            case ConditionLogic.NOT:
-                return !results[0];
+    // property.propertyPath ã‚’ãŸã©ã£ã¦ã€Œãã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’å«ã‚€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã€ã‚’è¿”ã™
+    private object GetParentTarget(SerializedProperty property)
+    {
+        string path = property.propertyPath.Replace(".Array.data[", "[");
+        object obj = property.serializedObject.targetObject;
+        var elements = path.Split('.');
+        for (int i = 0; i < elements.Length - 1; i++)
+        {
+            string element = elements[i];
+            if (element.Contains("["))
+            {
+                string elementName = element.Substring(0, element.IndexOf("["));
+                int index = int.Parse(element.Substring(element.IndexOf("[")).Replace("[", "").Replace("]", ""));
+                obj = GetValueFromObject(obj, elementName, index);
+            }
+            else
+            {
+                obj = GetValueFromObject(obj, element);
+            }
+            if (obj == null) return null;
+        }
+        
+        return obj;
+    }
 
-            case ConditionLogic.NAND:
-                return !Array.TrueForAll(results, r => r);
 
-            case ConditionLogic.NOR:
-                return !Array.Exists(results, r => r);
+    private object GetValueFromObject(object source, string name, int index = -1)
+    {
+    if (source == null) return null;
+    FieldInfo f = GetFieldRecursiveFromRoot(source, name);
+    if (f == null) return null;
+    object v = f.GetValue(source);
+    if (index >= 0 && v is System.Collections.IEnumerable enumerable)
+    {
+        var en = enumerable.GetEnumerator();
+            for (int i = 0; i <= index; i++)
+            {
+                if (!en.MoveNext()) return null;
+            }
 
-            case ConditionLogic.XOR:
-                int count = 0;
-                foreach (bool r in results)
-                    if (r) count++;
-                return (count % 2 == 1);
+            return en.Current;
+        }
+        return v;
+    }
 
-            default:
-                return true;
+    // ã“ã®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ãŒå±ã™ã‚‹ã€Œãã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå®Ÿä½“ã€ï¼ˆãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ã‚‚ã¤ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ï¼‰ã‚’è¿”ã™è£œåŠ©
+    private object GetObjectContainingField(SerializedProperty property, object root)
+    {
+        // GetParentTarget ?????????? root ????????????????i????????????g???p?j
+        return GetParentTarget(property) ?? root;
+    }
+
+    // --- ãƒ¡ã‚¤ãƒ³ã‚¹ãƒ¬ãƒƒãƒ‰åˆ¤å®šã¨å®‰å…¨ãªå†æç”» ---
+    private bool IsMainThreadSafe()
+    {
+        try
+        {
+            // main-thread-only APIs throw if called from loading thread; Screen.width is safe to probe
+            var _ = UnityEngine.Screen.width;
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
+
+    private void SafeRepaint(SerializedProperty property)
+    {
+        try
+        {
+            if (property == null || property.serializedObject == null) return;
+            // Repaint inspector of the target object
+            var editors = UnityEditor.Editor.CreateEditor(property.serializedObject.targetObject);
+            if (editors != null) editors.Repaint();
+        }
+        catch { /* swallow */ }
+    }
 }
+#endif

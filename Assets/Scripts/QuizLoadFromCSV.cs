@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -10,10 +10,10 @@ using System.Linq;
 [ExecuteAlways]
 public class QuizLoadFromCSV : MonoBehaviour
 {
-    [Header("‘ÎÛƒNƒCƒYƒf[ƒ^ƒx[ƒX")]
-    [SerializeField] public QuizDataWrapperSO defaultDatabase; // “à•”ƒfƒtƒHƒ‹ƒg
+    [Header("å¯¾è±¡ã‚¯ã‚¤ã‚ºãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹")]
+    [SerializeField] public QuizDataWrapperSO defaultDatabase; // å†…éƒ¨ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
     private List<QuizData> loadedQuizzes = new List<QuizData>();
-    [Header("XV—pİ’è")]
+    [Header("æ›´æ–°ç”¨è¨­å®š")]
     [SerializeField] bool isOverWrite = false;
     [SerializeField] string csvFilePath = "quiz_data.csv";
    
@@ -21,13 +21,13 @@ public class QuizLoadFromCSV : MonoBehaviour
 
 
     [OnInspectorButton]
-    // ŠO•”CSVƒ[ƒh
+    // å¤–éƒ¨CSVãƒ­ãƒ¼ãƒ‰
     private void UpdateCSV() 
     {
-        //ã‘‚«‚µ‚È‚¢ê‡ƒfƒtƒH‚ğƒ[ƒh.
+        //ä¸Šæ›¸ãã—ãªã„å ´åˆãƒ‡ãƒ•ã‚©ã‚’ãƒ­ãƒ¼ãƒ‰.
         if (!isOverWrite)
         {
-            // “à•”ƒfƒtƒHƒ‹ƒgƒ[ƒh
+            // å†…éƒ¨ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ­ãƒ¼ãƒ‰
             loadedQuizzes.AddRange(defaultDatabase.quizDatas);
         }
         string path = Path.Combine(Application.streamingAssetsPath, csvFilePath);
@@ -48,14 +48,14 @@ public class QuizLoadFromCSV : MonoBehaviour
     private System.Collections.IEnumerator LoadCSV(string path)
     {
 #if UNITY_WEBGL
-        // WebGL‚ÍUnityWebRequest‚ğg‚¤
+        // WebGLã¯UnityWebRequestã‚’ä½¿ã†
         using (UnityWebRequest www = UnityWebRequest.Get(path))
         {
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("CSVƒ[ƒh¸”s: " + www.error);
+                Debug.LogError("CSVãƒ­ãƒ¼ãƒ‰å¤±æ•—: " + www.error);
             }
             else
             {
@@ -75,19 +75,19 @@ public class QuizLoadFromCSV : MonoBehaviour
     private List<QuizData> ParseCSV(string text)
     {
         List<QuizData> list = new List<QuizData>();
-        string[] lines = text.Split('\n');//s‚Å•ªŠ„.
+        string[] lines = text.Split('\n');//è¡Œã§åˆ†å‰².
         //Debug.Log($"Lines={lines[0]}");
         for (int i = 1; i < lines.Length; i++)
         {
-            // , "" ‹ó”’ ‚Å•ªŠ„
+            // , "" ç©ºç™½ ã§åˆ†å‰²
             string[] cols = SplitCSVLine(lines[i]);
             if (cols.Length < 9) continue;
-            //ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÌƒI[ƒo[ƒ[ƒh.
-            QuizData q = new QuizData
+            //ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰.
+            QuizData q = new TextQuizData
             {
                 questionNumber = int.Parse(cols[0]),
                 questionText = cols[1],
-                choices = cols[2..^3],//Python‚Å‚¢‚¤ cols[2:-3]
+                choices = cols[2..^3],//Pythonã§ã„ã† cols[2:-3]
                 correctAnswer = Int32.Parse(cols[cols.Length -3]),
                 explanation = cols[cols.Length -2],
                 tag = cols[cols.Length -1]
@@ -96,7 +96,7 @@ public class QuizLoadFromCSV : MonoBehaviour
         }
         return list;
     }
-    // CSVs‚ğ•ªŠ„iƒJƒ“ƒ}‹æØ‚èAƒ_ƒuƒ‹ƒNƒH[ƒg‘Î‰j
+    // CSVè¡Œã‚’åˆ†å‰²ï¼ˆã‚«ãƒ³ãƒåŒºåˆ‡ã‚Šã€ãƒ€ãƒ–ãƒ«ã‚¯ã‚©ãƒ¼ãƒˆå¯¾å¿œï¼‰
     private string[] SplitCSVLine(string line)
     {
         List<string> result = new List<string>();
@@ -126,7 +126,7 @@ public class QuizLoadFromCSV : MonoBehaviour
         return result.ToArray();
     }
 
-    //ƒf[ƒ^ƒx[ƒX‚É“o˜^Aã‘‚«.
+    //ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã«ç™»éŒ²ã€ä¸Šæ›¸ã.
     private void MergeQuizzes(List<QuizData> external)
     {
         foreach (var q in external)
@@ -134,7 +134,7 @@ public class QuizLoadFromCSV : MonoBehaviour
             var existing = loadedQuizzes.Find(x => x.questionNumber == q.questionNumber);
             if (existing != null)
             {
-                // ã‘‚«
+                // ä¸Šæ›¸ã
                 existing.questionText = q.questionText;
                 existing.choices = q.choices;
                 existing.correctAnswer = q.correctAnswer;
@@ -142,25 +142,25 @@ public class QuizLoadFromCSV : MonoBehaviour
             }
             else
             {
-                // V‹K’Ç‰Á
+                // æ–°è¦è¿½åŠ 
                 loadedQuizzes.Add(q);
             }
         }
-        //ˆÈ‰º‚Ì•û–@‚ÍAƒrƒ‹ƒhŒã‚É‚Íg‚¦‚È‚¢è–@,‰Šúİ’è‚É‚Íg‚¦‚é.
-        //ƒf[ƒ^ƒx[ƒXXV
+        //ä»¥ä¸‹ã®æ–¹æ³•ã¯ã€ãƒ“ãƒ«ãƒ‰å¾Œã«ã¯ä½¿ãˆãªã„æ‰‹æ³•,åˆæœŸè¨­å®šã«ã¯ä½¿ãˆã‚‹.
+        //ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹æ›´æ–°
         defaultDatabase.quizDatas = loadedQuizzes.ToArray();
         UnityEngine.Debug.Log($"MargeQuizzes is {external.Count}");
     }
-    //V‚½‚ÈƒNƒCƒYƒf[ƒ^ƒx[ƒX‚ğì¬
+    //æ–°ãŸãªã‚¯ã‚¤ã‚ºãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã‚’ä½œæˆ
     [OnInspectorButton]
     private void ExportCSV(/*List<QuizData> external*/)
     {
         QuizData[] external = defaultDatabase.quizDatas;
-        //CSV‘‚«o‚µ
-        // V‚µ‚­csvƒtƒ@ƒCƒ‹‚ğì¬‚µ‚ÄA{}‚Ì’†‚Ì—v‘f•ªcsv‚É’Ç‹L‚ğ‚·‚é
+        //CSVæ›¸ãå‡ºã—
+        // æ–°ã—ãcsvãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã—ã¦ã€{}ã®ä¸­ã®è¦ç´ åˆ†csvã«è¿½è¨˜ã‚’ã™ã‚‹
         StreamWriter sw = new StreamWriter(Application.streamingAssetsPath +"/"+"AddData.csv", false, Encoding.GetEncoding("UTF-8"));
-        sw.NewLine = "\n"; //   ‰üs‚ğLF‚É“ˆê(—]•ª‚È‰üs‚ğ–h‚®)
-        string[] s1 = { "–â‘è”Ô†", "–â‘è•¶", "‘I‘ğˆA", "‘I‘ğˆB", "‘I‘ğˆC", "‘I‘ğˆD", "‰ğ“š(A`D)", "‰ğà", "ƒ^ƒO", "”õl" };
+        sw.NewLine = "\n"; //   æ”¹è¡Œã‚’LFã«çµ±ä¸€(ä½™åˆ†ãªæ”¹è¡Œã‚’é˜²ã)
+        string[] s1 = { "å•é¡Œç•ªå·", "å•é¡Œæ–‡", "é¸æŠè‚¢A", "é¸æŠè‚¢B", "é¸æŠè‚¢C", "é¸æŠè‚¢D", "è§£ç­”(Aï½D)", "è§£èª¬", "ã‚¿ã‚°", "å‚™è€ƒ" };
         string s2 = string.Join(",", s1);
         sw.WriteLine(s2);
         
@@ -170,29 +170,29 @@ public class QuizLoadFromCSV : MonoBehaviour
             string csvdata = string.Join(",", quiz);
             sw.WriteLine(csvdata);
         }
-        //‚±‚Ì•û–@‚Íè“®‚Å•Â‚¶‚é
+        //ã“ã®æ–¹æ³•ã¯æ‰‹å‹•ã§é–‰ã˜ã‚‹
         sw.Close();
         UnityEngine.Debug.Log("Export CSV file");
-        //V‚µ‚¢î•ñ‚ğ‚Á‚½ƒAƒZƒbƒg‚Ì•ªŠ„(ƒAƒZƒbƒg‚É‚µ‚È‚­‚Ä‚à—Ç‚¢).
+        //æ–°ã—ã„æƒ…å ±ã‚’æŒã£ãŸã‚¢ã‚»ãƒƒãƒˆã®åˆ†å‰²(ã‚¢ã‚»ãƒƒãƒˆã«ã—ãªãã¦ã‚‚è‰¯ã„).
         var asset = ScriptableObject.CreateInstance<QuizDataWrapperSO>();
         List<QuizData> result = new List<QuizData>();
         foreach (var q in external)
         {   
-            // V‹K’Ç‰Á
+            // æ–°è¦è¿½åŠ 
             result.Add(q);
             
         }
         asset.quizDatas = result.ToArray();
         UnityEngine.Debug.Log("Export Quiz Asset");
-        //ƒAƒZƒbƒg‚Ìì¬.
+        //ã‚¢ã‚»ãƒƒãƒˆã®ä½œæˆ.
         AssetDatabase.CreateAsset(asset, $"Assets/Quizdata/AddData.asset");
-        //ƒAƒZƒbƒg‚Ì‘¦•Û‘¶(CreateAsset‚Å‚à•Û‘¶‚³‚ê‚é‚ªAƒLƒƒƒbƒVƒ…‚ª‚ ‚éê‡‚³‚ê‚È‚¢)
+        //ã‚¢ã‚»ãƒƒãƒˆã®å³æ™‚ä¿å­˜(CreateAssetã§ã‚‚ä¿å­˜ã•ã‚Œã‚‹ãŒã€ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãŒã‚ã‚‹å ´åˆã•ã‚Œãªã„)
         AssetDatabase.SaveAssets();
-        //ProjectWindow‚ğÄ“Ç‚İ‚İ,•ÏX‚ğ“K‰
+        //ProjectWindowã‚’å†èª­ã¿è¾¼ã¿,å¤‰æ›´ã‚’é©å¿œ
         AssetDatabase.Refresh();
-        //ProjectWindow‚ğ•\¦
+        //ProjectWindowã‚’è¡¨ç¤º
         EditorUtility.FocusProjectWindow();
-        //ProjectWindow‚ÌƒCƒ“ƒXƒyƒNƒ^[‚É•\¦‚·‚éƒ‚ƒm‚ğ‚±‚ê‚É‚·‚é.
+        //ProjectWindowã®ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ãƒ¼ã«è¡¨ç¤ºã™ã‚‹ãƒ¢ãƒã‚’ã“ã‚Œã«ã™ã‚‹.
         Selection.activeObject = asset;
         UnityEngine.Debug.Log($"Quizzes is Added of  {external.Length}");
     
@@ -206,7 +206,7 @@ public class QuizLoadFromCSV : MonoBehaviour
     }
 }
 
-////ƒGƒfƒBƒ^[‚ğ•ÏXéŒ¾.
+////ã‚¨ãƒ‡ã‚£ã‚¿ãƒ¼ã‚’å¤‰æ›´å®£è¨€.
 //[CustomEditor(typeof(QuizLoadFromCSV))]
 //public class QuizDataBaseInspector : Editor
 //{

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,25 +7,28 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-//[ExecuteAlways]
+public enum GameModeType {Setup,Play,End}
+public enum QuizType { Random = 0,Order = 1}
 public class GameManager : MonoBehaviour
 {
-    [Header("–â‘èjson")]
+    [Header("å•é¡Œjson")]
     [SerializeField] string jsonName = "quiz_data";
-    [Header("ƒZƒbƒgƒAƒbƒvUI")]
+    [Header("ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—UI")]
     [SerializeField] GameObject setupPanel;
     [SerializeField] GameObject quizTitleButton;
     [SerializeField] Transform prefabParent;
     [SerializeField] TextMeshProUGUI errorMessage;
     private string[] QuizTitiles;
-    [Header("o‘è‰æ–Ê")]
+    [Header("å‡ºé¡Œç”»é¢")]
     [SerializeField] TextMeshProUGUI questionText;
+    [SerializeField] TextMeshProUGUI imageQuizText;
     [SerializeField] Image QuizImage;
-    [Header("‰ñ“šƒ{ƒ^ƒ“ƒvƒŒƒnƒu")]
+    [SerializeField] GridLayoutGroup QuizGrid;
+    [Header("å›ç­”ãƒœã‚¿ãƒ³ãƒ—ãƒ¬ãƒãƒ–")]
     [SerializeField] GameObject ButtonParent;
     [SerializeField] GameObject ButtonPrefab;
     [SerializeField] TextMeshProUGUI progressText;
-    [Header("ƒŠƒUƒ‹ƒg‰æ–Ê")]
+    [Header("ãƒªã‚¶ãƒ«ãƒˆç”»é¢")]
     [SerializeField] GameObject resultPanel;
     [SerializeField] TextMeshProUGUI resultText;
     [SerializeField] TextMeshProUGUI explainText;
@@ -34,8 +37,10 @@ public class GameManager : MonoBehaviour
     [Header("EnddingUI")]
     [SerializeField] GameObject enddingPanel;
     [SerializeField] TextMeshProUGUI collectCountText;
-    [Header("o‘èİ’è")]
+    [SerializeField] Button backButton;
+    [Header("å‡ºé¡Œè¨­å®š")]
     [SerializeField] GameModeType gameModeType = GameModeType.Setup;
+    [SerializeField] QuizType quizType = QuizType.Order;
     [SerializeField] int quizID = 0;
     [SerializeField] string quiztag = "";
 
@@ -48,17 +53,12 @@ public class GameManager : MonoBehaviour
     private QuizData currentQuiz;
     private List<GameObject> prefabsList = new List<GameObject>();
     private QuizDataWrapper wrapper = new QuizDataWrapper();
+    private Vector2 defaultGridSize = new Vector2(800,600);
+    private Vector2 expandGridSize = new Vector2(600,500);
 
 
-    private enum GameModeType
-    {
-        Setup,
-        Random,
-        ID,
-        Tag,
-        End,
-    }
-    public void SetUp(string json)
+    
+    public void TitleSetUp(string json)
     {
         StartCoroutine(ManagerLocater.Instance.loader.LoadJsonCoroutine(json, result =>
         {
@@ -67,35 +67,32 @@ public class GameManager : MonoBehaviour
                 Debug.Log($"Loaded {result.quizDatas.Length} quizzes");
                 quizData = result.quizDatas.ToList();
                 quizArray = result.quizDatas;
-                //I‚í‚Á‚Ä‚©‚çŒÄ‚Î‚ê‚éˆÀSˆÀ‘SİŒv
-                gameModeType = GameModeType.Random;
+                quizType = result.quizType;
+
+                //çµ‚ã‚ã£ã¦ã‹ã‚‰å‘¼ã°ã‚Œã‚‹å®‰å¿ƒå®‰å…¨è¨­è¨ˆ
+                gameModeType = GameModeType.Play;
                 StartQuiz();
             }
 
             else
-                Debug.LogError("Failed to load quiz data");
+                Debug.LogWarning("Failed to load quiz data");
+                errorMessage.text = json.ToString()+"ã®ã‚¯ã‚¤ã‚ºãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã›ã‚“";
         }));
         
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //StartCoroutine(ManagerLocater.Instance.loader.LoadJsonCoroutine(jsonName, result =>
-        //{
-        //    if (result != null)
-        //    {
-        //        Debug.Log($"Loaded {result.quizDatas.Length} quizzes");
-        //        quizData = result.quizDatas.ToList();
-        //        quizArray = result.quizDatas;
-        //    }
-               
-        //    else
-        //        Debug.LogError("Failed to load quiz data");
-        //}));
+        InitializeSetUpUI();
+        ShowTitle();
+    }
+    private void ShowTitle()
+    {
+        quizindex = 0;
+        sortQuizData.Clear();
+        gameModeType = GameModeType.Setup;
         QuizTitiles = GetQuizTitile();
-        SetUpUI();
-        ShowSetup();
-        
+        ShowTitleMenu();
     }
     [OnInspectorButton]
     public void StartQuiz()
@@ -103,22 +100,27 @@ public class GameManager : MonoBehaviour
         switch (gameModeType)
         {
             case GameModeType.Setup:
-                ShowSetup();
+                ShowTitleMenu();
                 break;
-            case GameModeType.Random:
-                ShowRandomQuiz();
-                break;
-            case GameModeType.ID:
-                //ShowQuizByNumber(testQuestionNumber);
-                break;
-            case GameModeType.Tag:
-                //ShowQuizByTag(testTag);
+            case GameModeType.Play:
+                SwitchQuizType();
                 break;
             case GameModeType.End:
                 break;
         }
     }
-    
+    private void SwitchQuizType()
+    {
+        switch (quizType)
+        {
+            case QuizType.Random:
+                ShowRandomQuiz();
+                break;
+            case QuizType.Order:
+                ShowQuizByOrder(); 
+                break;
+        }
+    }
     private string[] GetQuizTitile()
     {
         string streamingPath = Application.streamingAssetsPath;
@@ -142,16 +144,16 @@ public class GameManager : MonoBehaviour
                 id == currentQuiz.correctAnswer
             ));
     }
-    private void SetUpUI()
+    private void InitializeSetUpUI()
     {
         if (ButtonPrefab == null)
         {
             Debug.LogError("Button Prefab is not Exist");
         }
-        resultPanel.SetActive(false);
         nextButton.onClick.AddListener(() => OnNextButtonClick());
+        backButton.onClick.AddListener(() => ShowTitle());
     }
-    public void ShowSetup()
+    public void ShowTitleMenu()
     {
         setupPanel.SetActive(false);
         resultPanel.SetActive(false);
@@ -162,7 +164,7 @@ public class GameManager : MonoBehaviour
         if (!isQuizTitileSet)
         {
             CreateQuizTitleButton();
-            isQuizTitileSet = false;
+            isQuizTitileSet = true;
         }
     }
     private void CreateQuizTitleButton()
@@ -173,7 +175,7 @@ public class GameManager : MonoBehaviour
             GameObject clone = Instantiate(quizTitleButton,prefabParent);
             Button button = clone.GetComponent<Button>();
             if (button == null) button = clone.AddComponent<Button>();
-            button.onClick.AddListener(() => SetUp(QuizTitiles[index]));
+            button.onClick.AddListener(() => TitleSetUp(QuizTitiles[index]));
             TextMeshProUGUI text = clone.GetComponentInChildren<TextMeshProUGUI>();
             if (text == null) text = clone.AddComponent<TextMeshProUGUI>();
             text.text = QuizTitiles[i];
@@ -183,10 +185,9 @@ public class GameManager : MonoBehaviour
     {
         if (quizData.Count == 0)
         {
-            Debug.LogError("ƒNƒCƒYƒf[ƒ^‚ª‚ ‚è‚Ü‚¹‚ñ");
+            Debug.LogWarning("ã‚¯ã‚¤ã‚ºãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã›ã‚“");
             return;
         }
-        gameModeType = GameModeType.Random;
 
         if (sortQuizData.Count == 0)
         {
@@ -195,19 +196,40 @@ public class GameManager : MonoBehaviour
         setupPanel.SetActive(false);
         ShowQuiz(sortQuizData[quizindex]);
     }
+    private void ShowQuizByOrder()
+    {
+        if (quizData.Count == 0)
+        {
+            Debug.LogWarning("ã‚¯ã‚¤ã‚ºãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã›ã‚“");
+            return;
+        }
+        if (sortQuizData.Count == 0)
+        {
+            sortQuizData = quizData.ToList();
+        }
+        setupPanel.SetActive(false);
+        ShowQuiz(sortQuizData[quizindex]);
+    }
     private void ShowQuiz(QuizData quizdata)
     {
         quizindex++;
         currentQuiz = quizdata;
-        questionText.text = quizdata.questionText;
-        ImageQuizData x = quizdata as ImageQuizData;
+        questionText.text = "";
+        imageQuizText.text = "";
+        QuizImage.sprite = null;
 
-        if(x != null)
+        if (quizdata is ImageQuizData image)
         {
-            QuizImage.sprite = x.quizImage;
+            QuizImage.sprite = image.quizImage;
+            QuizImage.preserveAspect = true;
+            imageQuizText.text = image.questionText;
         }
-        //GetType()‚Å•ªŠòˆ—
-        progressText.text = quizindex.ToString() + "/" + sortQuizData.Count + "   QuizType:"+quizdata.GetType() ;
+        else if(quizdata is TextQuizData text)
+        {
+            questionText.text = text.questionText;
+        }
+        //GetType()ã§åˆ†å²å‡¦ç†
+        progressText.text = quizindex.ToString() + "/" + sortQuizData.Count;
         
         for(int i=0;i<currentQuiz.choices.Length;i++)
         {
@@ -220,16 +242,16 @@ public class GameManager : MonoBehaviour
                 new (168,168,0,255),
                 new (168,0,168,255),
             };
-            //i‚ÍQÆ,index‚Í’l
-            //i‚ğƒ‰ƒ€ƒ_‚É“n‚·‚ÆAƒ‹[ƒv‚ªI‚í‚Á‚½‚Æ‚«Ai = currentQuiz.choices.Length
-            //•Ï”ƒLƒƒƒvƒ`ƒƒ‚µ‚È‚¢‚ÆAƒ‰ƒ€ƒ_®‚ÅQÆ‚³‚ê‚é‚â‚Â‚ªÅŒã‚Ì‚â‚Â‚É‚È‚éB
+            //iã¯å‚ç…§,indexã¯å€¤
+            //iã‚’ãƒ©ãƒ ãƒ€ã«æ¸¡ã™ã¨ã€ãƒ«ãƒ¼ãƒ—ãŒçµ‚ã‚ã£ãŸã¨ãã€i = currentQuiz.choices.Length
+            //å¤‰æ•°ã‚­ãƒ£ãƒ—ãƒãƒ£ã—ãªã„ã¨ã€ãƒ©ãƒ ãƒ€å¼ã§å‚ç…§ã•ã‚Œã‚‹ã‚„ã¤ãŒæœ€å¾Œã®ã‚„ã¤ã«ãªã‚‹ã€‚
             int index = i;
-            //¶¬Ï‚İ‚È‚çoŒ»‚³‚¹‚é
+            //ç”Ÿæˆæ¸ˆã¿ãªã‚‰å‡ºç¾ã•ã›ã‚‹
             if (index < prefabsList.Count)
             {
                 prefabsList[index].SetActive(true);
             }
-            //‘I‘ğˆ¶¬
+            //é¸æŠè‚¢ç”Ÿæˆ
             else
             {
                 GameObject clone = Instantiate(ButtonPrefab, ButtonParent.transform);
@@ -244,11 +266,11 @@ public class GameManager : MonoBehaviour
                 {
                     button_accesser.SetTag(((char)('A' + index)).ToString());
                 }
-                //F•ÏX
+                //è‰²å¤‰æ›´
                 Image _image = clone.GetComponent<Image>();
                 if (_image != null) _image.color = mycolor[index % 6];
 
-                //ƒŠƒXƒg’Ç‰Á
+                //ãƒªã‚¹ãƒˆè¿½åŠ 
                 prefabsList.Add(clone);
             }
             //UpDateQuestion
@@ -259,14 +281,23 @@ public class GameManager : MonoBehaviour
             }
             
         }
-        //—]è•ª‚ğÁ‹
+        //ä½™å‰°åˆ†ã‚’æ¶ˆå»
         for(int i = currentQuiz.choices.Length; i< prefabsList.Count; i++)
         {
             prefabsList[i].SetActive(false);
         }
 
+        //Girdã®ã‚µã‚¤ã‚ºèª¿æ•´
+        if(currentQuiz.choices.Length < 5)
+        {
+            QuizGrid.cellSize = defaultGridSize;
+        }
+        else
+        {
+            QuizGrid.cellSize = expandGridSize;
+        }
 
-        resultPanel.SetActive(false);
+            resultPanel.SetActive(false);
         
     }
     
@@ -275,17 +306,17 @@ public class GameManager : MonoBehaviour
         if (is_correct) 
         {
             AddCount();
-            resultText.text = "³‰ğI";
+            resultText.text = "æ­£è§£ï¼";
             resultText.color = Color.green;
         }
         else
         {
-            resultText.text = $"•s³‰ğ...\n³‰ğ‚Íu{ToAlphabet(currentQuiz.correctAnswer)}v‚Å‚·";
+            resultText.text = $"ä¸æ­£è§£...\næ­£è§£ã¯ã€Œ{ToAlphabet(currentQuiz.correctAnswer)}ã€ã§ã™";
             resultText.color = Color.red;
         }
         if (explainText != null)
         {
-            explainText.text = $"‰ğà:\n{currentQuiz.explanation}";
+            explainText.text = $"è§£èª¬:\n{currentQuiz.explanation}";
         }
         if(quizindex == sortQuizData.Count)
         {
@@ -296,7 +327,7 @@ public class GameManager : MonoBehaviour
     }
     void ShowEndding()
     {
-        collectCountText.text = $"³‰ğŠ„‡:{collectCount.ToString()}/{quizData.Count}";
+        collectCountText.text = $"æ­£è§£å‰²åˆ:{collectCount.ToString()}/{quizData.Count}";
         enddingPanel.SetActive(true);
     }
 
@@ -317,30 +348,30 @@ public class GameManager : MonoBehaviour
 }
 
 
-////Inspector‚ÉÀsƒ{ƒ^ƒ“‚ğ’Ç‰Á‚·‚éƒNƒ‰ƒX
-////Šg’£‚·‚éƒNƒ‰ƒX
+////Inspectorã«å®Ÿè¡Œãƒœã‚¿ãƒ³ã‚’è¿½åŠ ã™ã‚‹ã‚¯ãƒ©ã‚¹
+////æ‹¡å¼µã™ã‚‹ã‚¯ãƒ©ã‚¹
 //[CustomEditor(typeof(GameManager))]
-//public class InspecterStartButton : Editor//Editor‚ğŒp³
+//public class InspecterStartButton : Editor//Editorã‚’ç¶™æ‰¿
 //{
-//    //‚±‚ÌƒNƒ‰ƒX‚ªƒCƒ“ƒXƒyƒNƒ^[‚É•\¦‚³‚ê‚éê‡‚ÌƒI[ƒo[ƒ‰ƒCƒh
+//    //ã“ã®ã‚¯ãƒ©ã‚¹ãŒã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ãƒ¼ã«è¡¨ç¤ºã•ã‚Œã‚‹å ´åˆã®ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰
 //    public override void OnInspectorGUI()
 //    {
-//        //Œ³‚ÌƒCƒ“ƒXƒyƒNƒ^[‚ğ•\¦
-//        //Base ->Šî’êƒNƒ‰ƒX(Editor)‚Ìƒƒ“ƒo[‚ÌƒAƒNƒZƒT
+//        //å…ƒã®ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ãƒ¼ã‚’è¡¨ç¤º
+//        //Base ->åŸºåº•ã‚¯ãƒ©ã‚¹(Editor)ã®ãƒ¡ãƒ³ãƒãƒ¼ã®ã‚¢ã‚¯ã‚»ã‚µ
 //        base.OnInspectorGUI();
 
-//        //Editor‚Ì•Ï”target(ƒCƒ“ƒXƒyƒNƒ^[‚É•\¦‚³‚ê‚é‘ÎÛ‚ğã‘‚«)
-//        //target‚ğŠg’£‚·‚éƒNƒ‰ƒX‚É•ÏŠ·‚·‚é
-//        GameManager _quizUIManager = this.target as GameManager;//(QuizUIManager)this.target;‚Æ“¯‹`(ƒLƒƒƒXƒg‚Å‚«‚È‚¢ê‡‚Énull‚ªo‚é)
+//        //Editorã®å¤‰æ•°target(ã‚¤ãƒ³ã‚¹ãƒšã‚¯ã‚¿ãƒ¼ã«è¡¨ç¤ºã•ã‚Œã‚‹å¯¾è±¡ã‚’ä¸Šæ›¸ã)
+//        //targetã‚’æ‹¡å¼µã™ã‚‹ã‚¯ãƒ©ã‚¹ã«å¤‰æ›ã™ã‚‹
+//        GameManager _quizUIManager = this.target as GameManager;//(QuizUIManager)this.target;ã¨åŒç¾©(ã‚­ãƒ£ã‚¹ãƒˆã§ããªã„å ´åˆã«nullãŒå‡ºã‚‹)
         
 //        if (GUILayout.Button("Start Quiz"))
 //        {
-//            //publicŠÖ”‚Ìê‡
+//            //publicé–¢æ•°ã®å ´åˆ
 //            _quizUIManager.StartQuiz();
-//            //privateŠÖ”‚Ìê‡
-//            //ŠÖ”‚ÉƒƒbƒZ[ƒW‚ğ‘—M->”­‰Î
-//            //SendMessage("ŠÖ”–¼",ˆø”,•Ô‚è’l‚ª‚ ‚é‚©)
-//            //Œ³‚ÌƒNƒ‰ƒX‚Å[ExecuteAlway]éŒ¾‚ª•K—v(Editorã‚Å“®‚­ƒƒ\ƒbƒh‚Æ‚¢‚¤ˆÓ–¡)
+//            //privateé–¢æ•°ã®å ´åˆ
+//            //é–¢æ•°ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ä¿¡->ç™ºç«
+//            //SendMessage("é–¢æ•°å",å¼•æ•°,è¿”ã‚Šå€¤ãŒã‚ã‚‹ã‹)
+//            //å…ƒã®ã‚¯ãƒ©ã‚¹ã§[ExecuteAlway]å®£è¨€ãŒå¿…è¦(Editorä¸Šã§å‹•ããƒ¡ã‚½ãƒƒãƒ‰ã¨ã„ã†æ„å‘³)
 //            //_quizUIManager.SendMessage("StartQuiz",null,SendMessageOptions.DontRequireReceiver);
 //        }
 //    }

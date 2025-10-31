@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4465668361629622787}
   - component: {fileID: 1272057697964199274}
   m_Layer: 5
-  m_Name: RandomButton
+  m_Name: StartButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,8 +200,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Random
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cd2017f861bc0f847acd4db9c3c02844, type: 2}
+  m_sharedMaterial: {fileID: -8106055933808734281, guid: cd2017f861bc0f847acd4db9c3c02844, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 157.3
+  m_fontSize: 154.8
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
